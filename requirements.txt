@@ -1,2 +1,4 @@
 xlsxwriter
 gspread
+google-auth
+google-auth-oauthlib
