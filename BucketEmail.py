@@ -554,7 +554,7 @@ if calculate_button:
                 )
 
                 if st.button('Submit Your Email'):
-                    st.markdown('[Click here to submit your email](https://forms.office.com/Pages/DesignPageV2.aspx?prevorigin=shell&origin=NeoPortalPage&subpage=design&id=yeHNPlqmqEuozH43_pGpj5Och4VCmiZNvXrhQCrVJVxUQ0JFMTI0MkxYSDIxNjNQN1BDM0NLUFJGWS4u)')
+                    st.markdown('[Click here to submit your email](https://forms.office.com/r/K4V3Cwb5Hb)')
                 
                 
                 # Provide additional details for calculations
