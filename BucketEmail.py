@@ -548,13 +548,13 @@ if calculate_button:
                 # Add a download button for the Excel file
                 if st.button('Submit Your Email'):
                     st.markdown('[Click here to submit your email](https://forms.office.com/Pages/DesignPageV2.aspx?prevorigin=shell&origin=NeoPortalPage&subpage=design&id=yeHNPlqmqEuozH43_pGpj5Och4VCmiZNvXrhQCrVJVxUQ0JFMTI0MkxYSDIxNjNQN1BDM0NLUFJGWS4u)')
-                    
-                    st.download_button(
-                        label="Download Results In Excel",
-                        data=excel_file,
-                        file_name="productivity_study.xlsx",
-                        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                    )
+                
+                st.download_button(
+                    label="Download Results In Excel",
+                    data=excel_file,
+                    file_name="productivity_study.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                )
                 
                 # Provide additional details for calculations
                 st.write(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg")
