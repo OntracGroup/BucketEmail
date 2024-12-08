@@ -8,7 +8,18 @@ import pandas as pd
 import smtplib
 from email.message import EmailMessage
 import io
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
+# Google Sheets Setup
+def connect_to_google_sheet(bucket_email):
+    """Connect to Google Sheets and return a sheet object."""
+    # Load credentials from Streamlit secrets
+    credentials_dict = st.secrets["gcp_service_account"]
+    credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
+    client = gspread.authorize(credentials)
+    sheet = client.open(sheet_name).sheet1  # Open the first sheet of the workbook
+    return sheet
 
 # Define custom CSS
 st.markdown("""
@@ -439,6 +450,8 @@ if st.button("Yes Please!"):
     
     if email and '@' in email:  # Check if email is valid
         send_email_with_csv(email, csv_data)
+        sheet = connect_to_google_sheet('User Emails')
+        sheet.append_row([email])
         st.success("Please check your inbox!")
         # Display the DataFrame in Streamlit        
         # st.write(comparison_df)
