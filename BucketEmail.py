@@ -546,6 +546,9 @@ if calculate_button:
                     st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.")
             
                 # Add a download button for the Excel file
+                if st.button('Submit Your Email'):
+                st.markdown('[Click here to submit your email](https://forms.office.com/Pages/DesignPageV2.aspx?prevorigin=shell&origin=NeoPortalPage&subpage=design&id=yeHNPlqmqEuozH43_pGpj5Och4VCmiZNvXrhQCrVJVxUQ0JFMTI0MkxYSDIxNjNQN1BDM0NLUFJGWS4u)')
+                
                 st.download_button(
                     label="Download Results In Excel",
                     data=excel_file,
