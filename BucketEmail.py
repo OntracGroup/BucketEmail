@@ -19,7 +19,7 @@ def connect_to_google_sheet(bucket_email):
     credentials_dict = st.secrets["gcp_service_account"]
     credentials = Credentials.from_service_account_info(credentials_dict)
     client = gspread.authorize(credentials)
-    sheet = client.open(sheet_name).sheet1  # Open the first sheet of the workbook
+    sheet = client.open(bucket_email).sheet1  # Open the first sheet of the workbook
     return sheet
 
 # Define custom CSS
