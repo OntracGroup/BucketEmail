@@ -11,19 +11,10 @@ import io
 import gspread
 from google.oauth2.service_account import Credentials
 
-# Google Sheets Setup
-def connect_to_google_sheet(bucket_email):
-    """Connect to Google Sheets and return a sheet object."""
-    # Load credentials from Streamlit secrets
-    scope = [
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive'
-    ]
-    credentials_dict = st.secrets["gcp_service_account"]
-    credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
-    client = gspread.authorize(credentials)
-    sheet = client.open(bucket_email).sheet1  # Open the first sheet of the workbook
-    return sheet
+# Your Google Form's embed code (replace with the iframe code you copied)
+google_form_url = """
+<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdYopcPdWKbV2C0AAMjrR6bBfmXB2GKAGE48SAITIX5cbeeAQ/viewform?embedded=true" width="640" height="420" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+"""
 
 # Define custom CSS
 st.markdown("""
@@ -440,6 +431,8 @@ st.write(" ")
 st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
 email = st.text_input("Email Address:")
 
+st.markdown(google_form_url, unsafe_allow_html=True)
+
 if st.button("Yes Please!"):
     swl = find_matching_swl(user_data)
     # Generate the comparison DataFrame and CSV data in advance
@@ -451,6 +444,7 @@ if st.button("Yes Please!"):
     csv_data = io.StringIO()
     comparison_df.to_csv(csv_data, index=False)
     csv_data.seek(0)  # Reset the pointer to the start of the file-like object
+
     
     if email and '@' in email:  # Check if email is valid
         send_email_with_csv(email, csv_data)
