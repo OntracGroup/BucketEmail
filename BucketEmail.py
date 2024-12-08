@@ -11,11 +11,6 @@ import io
 import gspread
 from google.oauth2.service_account import Credentials
 
-# Your Google Form's embed code (replace with the iframe code you copied)
-google_form_url = """
-<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdYopcPdWKbV2C0AAMjrR6bBfmXB2GKAGE48SAITIX5cbeeAQ/viewform?embedded=true" width="640" height="420" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
-"""
-
 # Define custom CSS
 st.markdown("""
     <style>
@@ -430,8 +425,6 @@ st.write(" ")
 st.write(" ")
 st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
 email = st.text_input("Email Address:")
-
-st.markdown(google_form_url, unsafe_allow_html=True)
 
 if st.button("Yes Please!"):
     swl = find_matching_swl(user_data)
