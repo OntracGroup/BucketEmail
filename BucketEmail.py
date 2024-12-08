@@ -15,9 +15,12 @@ from google.oauth2.service_account import Credentials
 def connect_to_google_sheet(bucket_email):
     """Connect to Google Sheets and return a sheet object."""
     # Load credentials from Streamlit secrets
-    scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+        scope = [
+        'https://www.googleapis.com/auth/spreadsheets',
+        'https://www.googleapis.com/auth/drive'
+    ]
     credentials_dict = st.secrets["gcp_service_account"]
-    credentials = Credentials.from_service_account_info(credentials_dict)
+    credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
     client = gspread.authorize(credentials)
     sheet = client.open(bucket_email).sheet1  # Open the first sheet of the workbook
     return sheet
