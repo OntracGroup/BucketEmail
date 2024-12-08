@@ -9,14 +9,15 @@ import smtplib
 from email.message import EmailMessage
 import io
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2.service_account import Credentials
 
 # Google Sheets Setup
 def connect_to_google_sheet(bucket_email):
     """Connect to Google Sheets and return a sheet object."""
     # Load credentials from Streamlit secrets
+    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     credentials_dict = st.secrets["gcp_service_account"]
-    credentials = ServiceAccountCredentials.from_json_keyfile_dict(credentials_dict, ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive'])
+    credentials = Credentials.from_service_account_info(credentials_dict)
     client = gspread.authorize(credentials)
     sheet = client.open(sheet_name).sheet1  # Open the first sheet of the workbook
     return sheet
