@@ -546,39 +546,12 @@ if calculate_button:
                     st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.")
             
                 # Add a download button for the Excel file
-                st.download_button(
-                    label="Download Results In Excel",
-                    data=excel_file,
-                    file_name="productivity_study.xlsx",
-                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                )
-
-                # Email input
-                st.write(" ")
-                st.write(" ")
-                st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
-                email = st.text_input("Email Address:")
-                
-                if st.button("Yes Please!"):
-                    swl = find_matching_swl(user_data)
-                    # Generate the comparison DataFrame and CSV data in advance
-                    selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
-                    bucket_data = load_bucket_data(selected_bucket_csv)
-                    optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
-                    
-                    comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
-                    csv_data = io.StringIO()
-                    comparison_df.to_csv(csv_data, index=False)
-                    csv_data.seek(0)  # Reset the pointer to the start of the file-like object
-                    
-                    if email and '@' in email:  # Check if email is valid
-                        send_email_with_csv(email, csv_data)
-                        st.success("Please check your inbox!")
-                        # Display the DataFrame in Streamlit        
-                        # st.write(comparison_df)
-                    else:
-                        st.warning("Please enter a valid email address to send the results.")
-                
+                #st.download_button(
+                #    label="Download Results In Excel",
+                #    data=excel_file,
+                #    file_name="productivity_study.xlsx",
+                #    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                #)
                 
                 # Provide additional details for calculations
                 st.write(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg")
@@ -591,7 +564,32 @@ if calculate_button:
         st.write("No matching excavator configuration found!")
 else:
     st.write("Please select options and press 'Calculate' to proceed.")
+
+# Email input
+st.write(" ")
+st.write(" ")
+st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
+email = st.text_input("Email Address:")
+
+if st.button("Yes Please!"):
+    swl = find_matching_swl(user_data)
+    # Generate the comparison DataFrame and CSV data in advance
+    selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
+    bucket_data = load_bucket_data(selected_bucket_csv)
+    optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
     
+    comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
+    csv_data = io.StringIO()
+    comparison_df.to_csv(csv_data, index=False)
+    csv_data.seek(0)  # Reset the pointer to the start of the file-like object
+    
+    if email and '@' in email:  # Check if email is valid
+        send_email_with_csv(email, csv_data)
+        st.success("Please check your inbox!")
+        # Display the DataFrame in Streamlit        
+        # st.write(comparison_df)
+    else:
+        st.warning("Please enter a valid email address to send the results.")
 
 # Run the Streamlit app
 if __name__ == '__main__':
