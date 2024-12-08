@@ -10,6 +10,21 @@ import io
 from io import BytesIO
 import math
 from PIL import Image
+import smtplib
+from email.message import EmailMessage
+
+# Define custom CSS
+st.markdown("""
+    <style>
+    .custom-font {
+        font-family: 'Arial'; /* Change to your desired font */
+        font-size: 16px;      /* Adjust the font size */
+        font-weight: bold;    /* Make the text bold */
+        color: #000000;       /* Customize the text color */
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
 
 # Define your CSV file paths here (use raw strings or double backslashes)
 swl_csv = 'excavator_swl.csv'  # Ensure this file exists
@@ -44,6 +59,98 @@ def load_excavator_swl_data(swl_csv):
     swl_data['reach'] = pd.to_numeric(swl_data['reach'], errors='coerce')
     swl_data['class'] = pd.to_numeric(swl_data['class'], errors='coerce')
     return swl_data
+
+def send_email_with_csv(email, csv_data):
+    try:
+        msg = EmailMessage()
+        msg['Subject'] = 'ONTRAC XMOR® Bucket Solution Results'
+        msg['From'] = 'bucketontrac@gmail.com'
+        msg['To'] = email
+
+        # HTML content with a table for the comparison results
+        html_content = f"""
+        <html>
+        <head>
+            <style>
+                table {{
+                    width: 100%;
+                    border-collapse: collapse;
+                    margin-top: 20px;
+                }}
+                th, td {{
+                    border: 1px solid #ddd;
+                    text-align: left;
+                    padding: 10px;
+                }}
+                th {{
+                    background-color: #f2f2f2;
+                    padding-top: 12px;
+                    padding-bottom: 12px;
+                    font-weight: bold;
+                }}
+                td {{
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }}
+                    .subheading {{
+                    background-color: #e0e0e0;
+                    font-weight: bold;
+                    text-align: center;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }}
+            </style>
+        </head>
+        <body>
+        <h2>ONTRAC XMOR® Bucket Solution Results</h2>
+        <p>G'day from the ONTRAC team! Here's your side-by-side comparison:</p>
+        <table>
+            <tr>
+                <th>Description</th>
+                <th>OLD Bucket</th>
+                <th>New Bucket</th>
+                <th>Difference</th>
+                <th>% Difference</th>
+            </tr>
+        """
+        
+        for index, row in comparison_df.iterrows():
+            # Apply subheading style to specific rows (0, 6, 14, and 21)
+            if index in [0, 6, 14, 21]:
+                html_content += f"""
+                <tr>
+                    <td class="subheading" colspan="5">{row['Description']}</td>
+                </tr>
+                """
+            else:
+                html_content += f"""
+                <tr>
+                    <td>{row['Description']}</td>
+                    <td>{row['OLD Bucket']}</td>
+                    <td>{row['New Bucket']}</td>
+                    <td>{row['Difference']}</td>
+                    <td>{row['% Difference']}</td>
+                </tr>
+                """
+        
+        html_content += """
+        </table>
+        <p>Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!</p>
+        </body>
+        </html>
+        """
+
+        msg.add_alternative(html_content, subtype='html')
+        
+        # Send the email
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login("bucketontrac@gmail.com", "albs gdyi jqzn fxgl")
+            smtp.send_message(msg)
+        st.success("Email sent successfully!")
+         
+    except Exception as e:
+        st.error(f"An error occurred: {str(e)}")
+
 
 def generate_html_table(data, title):
     """
