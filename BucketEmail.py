@@ -431,6 +431,8 @@ def collect_email(sheet):
             try:
                 sheet.append_row([email])  # Add email to the Google Sheet
                 st.success("Please check your inbox!")
+                # Reset session state to prevent form reappearing
+                st.session_state.calculate_button = False  
             except Exception as e:
                 st.error(f"An error occurred: {e}")
         else:
@@ -443,15 +445,17 @@ except Exception as e:
     st.error(f"Unable to connect to Google Sheets: {e}")
     sheet = None
 
+# **CALCULATION LOGIC**
 # Run calculations only when the button is pressed
-# Find matching SWL and optimal bucket
 if 'calculate_button' not in st.session_state:
     st.session_state.calculate_button = False
 
+# Button to trigger calculations
 calculate_button = st.button('Calculate', on_click=lambda: st.session_state.update({'calculate_button': True}))
 
 if st.session_state.calculate_button:
-    swl = find_matching_swl(user_data)
+    swl = find_matching_swl(user_data)  # Calculate matching SWL
+    
     if swl:
         # Load selected bucket data
         selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
@@ -460,26 +464,35 @@ if st.session_state.calculate_button:
         optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
         
         if optimal_bucket:
+            # Generate DataFrame for comparison
             comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
-
             st.success(f"Good news! ONTRAC could improve your productivity by up to {st.session_state.productivity}!")
-            st.markdown(f'<p class="custom-font">Your ONTRAC Bucket Solution is the: XMOR® {optimal_bucket["bucket_name"]} ({optimal_bucket["bucket_size"]} m³)</p>',unsafe_allow_html=True) 
+            
+            st.markdown(
+                f'<p class="custom-font">Your ONTRAC Bucket Solution is the: XMOR® {optimal_bucket["bucket_name"]} ({optimal_bucket["bucket_size"]} m³)</p>',
+                unsafe_allow_html=True
+            ) 
+            
             st.success(f"Bucket Payload Increase: +{st.session_state.volume_increase} m³ (+{st.session_state.volume_increase_percentage})")
             st.write(f"Matching Excavator Successfully Found.")
-            st.write(f"Your Matching Excavator Safe Working Load at {user_data["reach"]}m reach: {swl} kg")
+            st.write(f"Your Matching Excavator Safe Working Load at {user_data['reach']}m reach: {swl} kg")
             st.write(f"Your XMOR® Bucket Total Suspended Load: {optimal_bucket['total_bucket_weight']} kg")
             
-            # Display the DataFrame in Streamlit
-
-            # Ask for email after calculation is complete
+            # Display the DataFrame
+            st.dataframe(comparison_df)
+            
+            # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
                 st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>', unsafe_allow_html=True)
                 collect_email(sheet)
-                
+        
         else:
-            st.write("No suitable bucket found within SWL limits.")
+            st.warning("No suitable bucket found within SWL limits.")
     else:
-        st.write("No matching excavator configuration found!")
+        st.warning("No matching excavator configuration found!")
+        
+    # Reset the calculation state after completion (optional)
+    st.session_state.calculate_button = False
 
 # Run the Streamlit app
 if __name__ == '__main__':
