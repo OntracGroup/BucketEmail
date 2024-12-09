@@ -57,7 +57,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
         pdf.ln()
 
     # Save PDF to a BytesIO object
-    pdf_output = io.BytesIO()
+    pdf_output = io.BytesIO()  # Ensure io.BytesIO is used here
     pdf.output(pdf_output)
     pdf_output.seek(0)  # Reset pointer to the beginning of the file-like object
     return pdf_output
@@ -220,9 +220,11 @@ def send_email_with_pdf(email, pdf_file):
     msg['From'] = st.secrets["email_username"]  # Sender email
     msg['To'] = email
     
-    # Attach the PDF
+    # Read the PDF content from the BytesIO object and attach it
+    pdf_content = pdf_file.read()
+    
     part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_file.read())
+    part.set_payload(pdf_content)  # Attach the PDF content (not the BytesIO object)
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
