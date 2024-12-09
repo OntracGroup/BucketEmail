@@ -56,10 +56,10 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
             pdf.cell(40, 10, str(value), border=1, align='C')
         pdf.ln()
 
-    # Save PDF as a byte object
+    # Save PDF to a BytesIO object
     pdf_output = io.BytesIO()
     pdf.output(pdf_output)
-    pdf_output.seek(0)  # Reset pointer to the beginning of the file
+    pdf_output.seek(0)  # Reset pointer to the beginning of the file-like object
     return pdf_output
 
 # Google Sheets credentials and setup
