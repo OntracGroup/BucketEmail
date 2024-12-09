@@ -265,7 +265,7 @@ user_data = {
 }
     
 # Add a "Calculate" button
-calculate_button = st.button("Calculate")
+#calculate_button = st.button("Calculate")
 
 def generate_comparison_df(user_data, optimal_bucket, swl):
         old_capacity = user_data['current_bucket_size']
