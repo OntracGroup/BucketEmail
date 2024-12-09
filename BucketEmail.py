@@ -9,7 +9,58 @@ import smtplib
 from email.message import EmailMessage
 import io
 import gspread
+from fpdf import FPDF
 from google.oauth2.service_account import Credentials
+
+def generate_pdf(user_data, optimal_bucket, comparison_df):
+    """Generate a PDF file with user results."""
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", size=12)
+
+    # Title
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(0, 10, 'ONTRAC Excavator Bucket Optimization Results', ln=True, align='C')
+    pdf.ln(10)  # Line break
+
+    # User Inputs
+    pdf.set_font("Arial", size=12)
+    pdf.cell(0, 10, f"User Input Data", ln=True)
+    for key, value in user_data.items():
+        pdf.cell(0, 10, f"{key}: {value}", ln=True)
+    
+    pdf.ln(10)  # Line break
+    
+    # Optimal Bucket Results
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 10, 'Optimal Bucket Information', ln=True)
+    for key, value in optimal_bucket.items():
+        pdf.set_font("Arial", size=12)
+        pdf.cell(0, 10, f"{key}: {value}", ln=True)
+    
+    pdf.ln(10)  # Line break
+    
+    # Table for DataFrame
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 10, 'Comparison Table', ln=True)
+    pdf.set_font("Arial", size=10)
+    
+    # Column headers
+    for col in comparison_df.columns:
+        pdf.cell(40, 10, col, border=1, align='C')
+    pdf.ln()
+
+    # Rows
+    for index, row in comparison_df.iterrows():
+        for value in row:
+            pdf.cell(40, 10, str(value), border=1, align='C')
+        pdf.ln()
+
+    # Save PDF as a byte object
+    pdf_output = io.BytesIO()
+    pdf.output(pdf_output)
+    pdf_output.seek(0)  # Reset pointer to the beginning of the file
+    return pdf_output
 
 # Google Sheets credentials and setup
 def connect_to_google_sheet(sheet_name):
@@ -162,6 +213,25 @@ def send_email_with_csv(email, csv_data):
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
 
+def send_email_with_pdf(email, pdf_file):
+    """Send the PDF file via email."""
+    msg = EmailMessage()
+    msg['Subject'] = 'Your ONTRAC Excavator Results'
+    msg['From'] = st.secrets["email_username"]  # Sender email
+    msg['To'] = email
+    msg.set_content('Attached is your ONTRAC Excavator Bucket Optimization Results.')
+    
+    # Attach the PDF file
+    msg.add_attachment(pdf_file.getvalue(), maintype='application', subtype='pdf', filename='results.pdf')
+
+    # Send the email
+    try:
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+            server.login(st.secrets["email_username"], st.secrets["email_password"])
+            server.send_message(msg)
+        st.success(f"Results sent to {email}!")
+    except Exception as e:
+        st.error(f"An error occurred while sending the email: {e}")
         
 # Main Streamlit App UI
 def app():
@@ -433,6 +503,7 @@ def collect_email(sheet):
         if "@" in email and "." in email:  # Basic email validation
             try:
                 sheet.append_row([email])  # Add email to the Google Sheet
+                send_email_with_pdf(email, pdf_file)
                 st.success("Please check your inbox!")
                 # Allow users to submit another email
                 st.session_state.email_form_submitted = True
@@ -469,6 +540,7 @@ if st.session_state.calculate_button:
         
         if optimal_bucket:
             # Generate DataFrame for comparison
+            pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
             comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
             st.success(f"Good news! ONTRAC could improve your productivity by up to {st.session_state.productivity}!")
             
