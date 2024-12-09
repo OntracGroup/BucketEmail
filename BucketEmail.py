@@ -540,8 +540,8 @@ if st.session_state.calculate_button:
         
         if optimal_bucket:
             # Generate DataFrame for comparison
-            pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
             comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
+            pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
             st.success(f"Good news! ONTRAC could improve your productivity by up to {st.session_state.productivity}!")
             
             st.markdown(
