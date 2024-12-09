@@ -446,32 +446,32 @@ if calculate_button:
     comparison_df.to_csv(csv_data, index=False)
     csv_data.seek(0)  # Reset the pointer to the start of the file-like object
 
-    def collect_email(sheet):
-        """Collect the user's email and store it in the Google Sheet."""
-        with st.form("email_form", clear_on_submit=True):
-            email = st.text_input("Enter your email to receive your comparison!", placeholder="you@example.com")
-            submit_button = st.form_submit_button("Yes Please!")
-            
-        if submit_button:
-            if "@" in email and "." in email:  # Basic email validation
-                try:
-                    sheet.append_row([email])  # Add email to the Google Sheet
-                    st.success("Please check your inbox!")
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
-            else:
-                st.error("Please enter a valid email address.")
-    
-    # Connect to Google Sheets
-    try:
-        sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
-    except Exception as e:
-        st.error(f"Unable to connect to Google Sheets: {e}")
-        sheet = None
-    
-    # Call the email collection function
-    if sheet:
-        collect_email(sheet)
+def collect_email(sheet):
+    """Collect the user's email and store it in the Google Sheet."""
+    with st.form("email_form", clear_on_submit=True):
+        email = st.text_input("Enter your email to receive your comparison!", placeholder="you@example.com")
+        submit_button = st.form_submit_button("Yes Please!")
+        
+    if submit_button:
+        if "@" in email and "." in email:  # Basic email validation
+            try:
+                sheet.append_row([email])  # Add email to the Google Sheet
+                st.success("Please check your inbox!")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+        else:
+            st.error("Please enter a valid email address.")
+
+# Connect to Google Sheets
+try:
+    sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
+except Exception as e:
+    st.error(f"Unable to connect to Google Sheets: {e}")
+    sheet = None
+
+# Call the email collection function
+if sheet:
+    collect_email(sheet)
 
 # Run the Streamlit app
 if __name__ == '__main__':
