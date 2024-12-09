@@ -11,6 +11,16 @@ import io
 import gspread
 from google.oauth2.service_account import Credentials
 
+# Google Sheets credentials and setup
+def connect_to_google_sheet(sheet_name):
+    """Connect to Google Sheets and return a sheet object."""
+    scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+    credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
+    credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
+    client = gspread.authorize(credentials)
+    sheet = client.open(bucket_email).sheet1  # Open the first sheet of the workbook
+    return sheet
+
 # Define custom CSS
 st.markdown("""
     <style>
