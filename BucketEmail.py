@@ -451,7 +451,7 @@ if st.button("Yes Please!"):
     
     if email and '@' in email:  # Check if email is valid
         send_email_with_csv(email, csv_data)
-        sheet = connect_to_google_sheet('bucket_email')
+        sheet = connect_to_google_sheet("bucket_email")
         sheet.append_row([email])
         st.success("Please check your inbox!")
         # Display the DataFrame in Streamlit        
