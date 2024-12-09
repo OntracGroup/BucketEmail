@@ -23,7 +23,7 @@ def connect_to_google_sheet(sheet_name):
         sheet_names = client.openall()  # This lists all accessible sheets
         st.write("Accessible Sheets:", [sheet.title for sheet in sheet_names])
     except Exception as e:
-    st.error(f"Error listing available sheets: {e}")
+        st.error(f"Error listing available sheets: {e}")
     
     sheet = client.open("sheet_name").sheet1  # Open the first sheet of the workbook
     return sheet
