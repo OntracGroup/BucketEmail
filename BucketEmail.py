@@ -490,7 +490,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
     #comparison_df.to_csv(csv_data, index=False)
     #csv_data.seek(0)  # Reset the pointer to the start of the file-like object
 
-def collect_email(sheet):
+def collect_email(sheet, user_data, optimal_bucket, comparison_df):
     """Collect the user's email and store it in the Google Sheet."""
     if 'email_form_submitted' not in st.session_state:
         st.session_state.email_form_submitted = False
@@ -503,8 +503,15 @@ def collect_email(sheet):
         if "@" in email and "." in email:  # Basic email validation
             try:
                 sheet.append_row([email])  # Add email to the Google Sheet
+                
+                # Generate PDF with the results
+                pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
+                
+                # Send the email with the PDF attached
                 send_email_with_pdf(email, pdf_file)
+                
                 st.success("Please check your inbox!")
+                
                 # Allow users to submit another email
                 st.session_state.email_form_submitted = True
             except Exception as e:
