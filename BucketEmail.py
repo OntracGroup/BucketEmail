@@ -215,14 +215,18 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
-    msg = EmailMessage()
+    msg = MIMEMultipart()
     msg['Subject'] = 'Your ONTRAC Excavator Results'
     msg['From'] = st.secrets["email_username"]  # Sender email
     msg['To'] = email
     msg.set_content('Attached is your ONTRAC Excavator Bucket Optimization Results.')
     
-    # Attach the PDF file
-    msg.add_attachment(pdf_file.getvalue(), maintype='application', subtype='pdf', filename='results.pdf')
+    # Attach the PDF
+    part = MIMEBase('application', 'octet-stream')
+    part.set_payload(pdf_file.read())
+    encoders.encode_base64(part)
+    part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
+    msg.attach(part)
 
     # Send the email
     try:
