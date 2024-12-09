@@ -434,35 +434,49 @@ if calculate_button:
 st.write(" ")
 st.write(" ")
 st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
+email = st.text_input("Email Address:")
 
-# Email collection form
-def collect_email(sheet):
-    """Collect the user's email and store it in the Google Sheet."""
-    with st.form("email_form", clear_on_submit=True):
-        email = st.text_input("Enter your email to receive updates and insights!", placeholder="you@example.com")
-        submit_button = st.form_submit_button("Submit")
-        
-    if submit_button:
-        if "@" in email and "." in email:  # Basic email validation
-            try:
-                sheet.append_row([email])  # Add email to the Google Sheet
-                st.success("Thank you! Your email has been collected.")
-            except Exception as e:
-                st.error(f"An error occurred: {e}")
-        else:
-            st.error("Please enter a valid email address.")
+if st.button("Yes Please!"):
+    swl = find_matching_swl(user_data)
+    # Generate the comparison DataFrame and CSV data in advance
+    selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
+    bucket_data = load_bucket_data(selected_bucket_csv)
+    optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
+    
+    comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
+    csv_data = io.StringIO()
+    comparison_df.to_csv(csv_data, index=False)
+    csv_data.seek(0)  # Reset the pointer to the start of the file-like object
 
-# Connect to Google Sheets
-try:
-    sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
-except Exception as e:
-    st.error(f"Unable to connect to Google Sheets: {e}")
-    sheet = None
-
+    
+    if email and '@' in email:  # Check if email is valid
+        # Email collection form
+    def collect_email(sheet):
+        """Collect the user's email and store it in the Google Sheet."""
+        with st.form("email_form", clear_on_submit=True):
+            email = st.text_input("Enter your email to receive updates and insights!", placeholder="you@example.com")
+            submit_button = st.form_submit_button("Submit")
+            
+        if submit_button:
+            if "@" in email and "." in email:  # Basic email validation
+                try:
+                    sheet.append_row([email])  # Add email to the Google Sheet
+                    st.success("Please check your inbox!")
+                except Exception as e:
+                    st.error(f"An error occurred: {e}")
+            else:
+                st.error("Please enter a valid email address.")
+    
+    # Connect to Google Sheets
+    try:
+        sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
+    except Exception as e:
+        st.error(f"Unable to connect to Google Sheets: {e}")
+        sheet = None
+    
 # Call the email collection function
 if sheet:
     collect_email(sheet)
-
 
 # Run the Streamlit app
 if __name__ == '__main__':
