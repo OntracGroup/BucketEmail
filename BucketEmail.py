@@ -220,8 +220,8 @@ def send_email_with_pdf(email, pdf_file):
     msg['From'] = st.secrets["email_username"]  # Sender email
     msg['To'] = email
     
-    # Read the PDF content from the BytesIO object and attach it
-    pdf_content = pdf_file.read()
+    # Get the content of the PDF as bytes
+    pdf_content = pdf_file.getvalue()  # Correct method to extract bytes from BytesIO
     
     part = MIMEBase('application', 'octet-stream')
     part.set_payload(pdf_content)  # Attach the PDF content (not the BytesIO object)
