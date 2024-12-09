@@ -227,14 +227,14 @@ def send_email_with_pdf(email, pdf_file):
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
 
-    # Send the email
+    # Send the email (using SMTP)
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-            server.login(st.secrets["email_username"], st.secrets["email_password"])
-            server.send_message(msg)
-        st.success(f"Results sent to {email}!")
+        with smtplib.SMTP('smtp.example.com', 587) as server:
+            server.starttls()
+            server.login('your_email@example.com', 'your_password')
+            server.sendmail(msg['From'], msg['To'], msg.as_string())
     except Exception as e:
-        st.error(f"An error occurred while sending the email: {e}")
+        print(f"Failed to send email: {e}")
         
 # Main Streamlit App UI
 def app():
