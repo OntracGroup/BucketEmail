@@ -499,7 +499,7 @@ if st.session_state.calculate_button:
         st.warning("No matching excavator configuration found!")
         
     # Reset the calculation state after completion (optional)
-    #st.session_state.calculate_button = False
+    st.session_state.calculate_button = False
 
 # Run the Streamlit app
 if __name__ == '__main__':
