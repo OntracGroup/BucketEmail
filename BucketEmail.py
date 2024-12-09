@@ -18,7 +18,7 @@ def connect_to_google_sheet(sheet_name):
     credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
     credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
     client = gspread.authorize(credentials)
-    sheet = client.open(bucket_email).sheet1  # Open the first sheet of the workbook
+    sheet = client.open("bucket_email").sheet1  # Open the first sheet of the workbook
     return sheet
 
 # Define custom CSS
