@@ -18,6 +18,10 @@ def connect_to_google_sheet(sheet_name):
     credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
     credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
     client = gspread.authorize(credentials)
+    sheet_names = client.openall()  # This lists all accessible sheets
+    st.write("Accessible Sheets:", [sheet.title for sheet in sheet_names])
+except Exception as e:
+    st.error(f"Error listing available sheets: {e}")
     sheet = client.open("sheet_name").sheet1  # Open the first sheet of the workbook
     return sheet
 
