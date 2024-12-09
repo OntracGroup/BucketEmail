@@ -430,12 +430,11 @@ if calculate_button:
     else:
         st.write("No matching excavator configuration found!")
 
-# Email input
-st.write(" ")
-st.write(" ")
-st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
-
 if calculate_button:
+    # Email input
+    st.write(" ")
+    st.write(" ")
+    st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
     swl = find_matching_swl(user_data)
     # Generate the comparison DataFrame and CSV data in advance
     selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
