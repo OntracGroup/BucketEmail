@@ -473,10 +473,6 @@ if st.button("Yes Please!"):
         except Exception as e:
             st.error(f"Unable to connect to Google Sheets: {e}")
             sheet = None
-    
-    # Call the email collection function
-    if sheet:
-        collect_email(sheet)
 
 # Run the Streamlit app
 if __name__ == '__main__':
