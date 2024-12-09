@@ -18,7 +18,7 @@ def connect_to_google_sheet(sheet_name):
     credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
     credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
     client = gspread.authorize(credentials)
-    sheet = client.open("bucket_email").sheet1  # Open the first sheet of the workbook
+    sheet = client.open("sheet_name").sheet1  # Open the first sheet of the workbook
     return sheet
 
 # Define custom CSS
@@ -451,7 +451,7 @@ if st.button("Yes Please!"):
     
     if email and '@' in email:  # Check if email is valid
         send_email_with_csv(email, csv_data)
-        sheet = connect_to_google_sheet('User Emails')
+        sheet = connect_to_google_sheet('bucket_email')
         sheet.append_row([email])
         st.success("Please check your inbox!")
         # Display the DataFrame in Streamlit        
