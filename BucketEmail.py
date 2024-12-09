@@ -219,7 +219,6 @@ def send_email_with_pdf(email, pdf_file):
     msg['Subject'] = 'Your ONTRAC Excavator Results'
     msg['From'] = st.secrets["email_username"]  # Sender email
     msg['To'] = email
-    msg.set_content('Attached is your ONTRAC Excavator Bucket Optimization Results.')
     
     # Attach the PDF
     part = MIMEBase('application', 'octet-stream')
