@@ -451,28 +451,28 @@ if st.button("Yes Please!"):
     
     if email and '@' in email:  # Check if email is valid
         # Email collection form
-    def collect_email(sheet):
-        """Collect the user's email and store it in the Google Sheet."""
-        with st.form("email_form", clear_on_submit=True):
-            email = st.text_input("Enter your email to receive updates and insights!", placeholder="you@example.com")
-            submit_button = st.form_submit_button("Submit")
-            
-        if submit_button:
-            if "@" in email and "." in email:  # Basic email validation
-                try:
-                    sheet.append_row([email])  # Add email to the Google Sheet
-                    st.success("Please check your inbox!")
-                except Exception as e:
-                    st.error(f"An error occurred: {e}")
-            else:
-                st.error("Please enter a valid email address.")
-    
-    # Connect to Google Sheets
-    try:
-        sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
-    except Exception as e:
-        st.error(f"Unable to connect to Google Sheets: {e}")
-        sheet = None
+        def collect_email(sheet):
+            """Collect the user's email and store it in the Google Sheet."""
+            with st.form("email_form", clear_on_submit=True):
+                email = st.text_input("Enter your email to receive updates and insights!", placeholder="you@example.com")
+                submit_button = st.form_submit_button("Submit")
+                
+            if submit_button:
+                if "@" in email and "." in email:  # Basic email validation
+                    try:
+                        sheet.append_row([email])  # Add email to the Google Sheet
+                        st.success("Please check your inbox!")
+                    except Exception as e:
+                        st.error(f"An error occurred: {e}")
+                else:
+                    st.error("Please enter a valid email address.")
+        
+        # Connect to Google Sheets
+        try:
+            sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
+        except Exception as e:
+            st.error(f"Unable to connect to Google Sheets: {e}")
+            sheet = None
     
 # Call the email collection function
 if sheet:
