@@ -405,7 +405,12 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
 
 # Run calculations only when the button is pressed
 # Find matching SWL and optimal bucket
-if calculate_button:
+if 'calculate_button' not in st.session_state:
+    st.session_state.calculate_button = False
+
+calculate_button = st.button('Calculate', on_click=lambda: st.session_state.update({'calculate_button': True}))
+
+if st.session_state.calculate_button:
     swl = find_matching_swl(user_data)
     if swl:
         # Load selected bucket data
@@ -425,12 +430,17 @@ if calculate_button:
             st.write(f"Your XMOR® Bucket Total Suspended Load: {optimal_bucket['total_bucket_weight']} kg")
             
             # Display the DataFrame in Streamlit
+
+            # Ask for email after calculation is complete
+            if sheet:  # Ensure the sheet is connected
+                st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>', unsafe_allow_html=True)
+                collect_email(sheet)
+                
         else:
             st.write("No suitable bucket found within SWL limits.")
     else:
         st.write("No matching excavator configuration found!")
-
-if calculate_button:
+    
     # Email input
     st.write(" ")
     st.write(" ")
