@@ -25,7 +25,7 @@ def connect_to_google_sheet(sheet_name):
     except Exception as e:
         st.error(f"Error listing available sheets: {e}")
     
-    sheet = client.open("sheet_name").sheet1  # Open the first sheet of the workbook
+    sheet = client.open("bucket_email").worksheet("Sheet1")  # Open the first sheet of the workbook
     return sheet
 
 # Define custom CSS
