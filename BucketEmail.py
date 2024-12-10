@@ -220,20 +220,17 @@ def send_email_with_pdf(email, pdf_file):
     msg['From'] = st.secrets["email_username"]  # Sender email
     msg['To'] = email
     
-    # Get the content of the PDF as bytes
-    pdf_content = pdf_file.getvalue()  # Correct method to extract bytes from BytesIO
-    
+    # Attach the PDF (convert the BytesIO object to bytes)
     part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_content)  # Attach the PDF content (not the BytesIO object)
+    part.set_payload(pdf_file.getvalue())  # Use getvalue() to get the byte content from BytesIO
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
 
     # Send the email (using SMTP)
     try:
-        with smtplib.SMTP('smtp.example.com', 587) as server:
-            server.starttls()
-            server.login('your_email@example.com', 'your_password')
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login("bucketontrac@gmail.com", "albs gdyi jqzn fxgl")
             server.sendmail(msg['From'], msg['To'], msg.as_string())
     except Exception as e:
         print(f"Failed to send email: {e}")
