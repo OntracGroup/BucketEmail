@@ -36,9 +36,29 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
-    elements = []  # List of all elements to be added to the PDF
     
-    # Set up document styles
+    # Create the canvas to allow custom background drawing
+    doc.build(lambda canvas, doc: add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df))
+
+    pdf_output.seek(0)
+    return pdf_output
+
+def calculate_column_widths(table_data):
+    """Calculate column widths dynamically based on the longest content in each column."""
+    column_widths = []
+    for col in zip(*table_data):  # Transpose to iterate by column
+        max_len = max(len(str(cell)) for cell in col)  # Get max length of content in the column
+        column_widths.append(max_len * 6)  # Multiply by 6 for width approximation (you can adjust this factor)
+    return column_widths
+
+def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+    """Add a dark background to the PDF page before adding content."""
+    # Set the background color to dark
+    canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
+    canvas.rect(0, 0, letter[0], letter[1], fill=True)
+
+    # Now add the content
+    elements = []  # List of all elements to be added to the PDF
     styles = getSampleStyleSheet()
     title_style = styles['Title']
     heading_style = styles['Heading1']
@@ -67,9 +87,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Modify the table and use specific widths for columns
+    # Calculate column widths dynamically based on the longest content in each column
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths=[200, 100, 150])  # Wider description column only
+    side_by_side_column_widths = calculate_column_widths(side_by_side_table_data)
+    side_by_side_table = Table(side_by_side_table_data, colWidths=side_by_side_column_widths)
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
@@ -91,9 +112,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Modify the table and use original column widths
+    # Calculate column widths dynamically for loadout productivity table
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[160, 100, 150])  # Original column widths
+    loadout_productivity_column_widths = calculate_column_widths(loadout_productivity_table_data)
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=loadout_productivity_column_widths)
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
@@ -111,13 +133,14 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
-    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
+    # 4️⃣ Add Section 3: Swings Simulation
+    elements.append(Paragraph("Swings Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Modify the table and use original column widths
+    # Calculate column widths dynamically for swings simulation table
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[160, 100, 150])  # Original column widths
+    swings_simulation_column_widths = calculate_column_widths(swings_simulation_table_data)
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=swings_simulation_column_widths)
     swings_simulation_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
@@ -135,13 +158,14 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
+    # 5️⃣ Add Section 4: Improved Cycle Times
+    elements.append(Paragraph("Improved Cycle Times", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Modify the table and use original column widths
+    # Calculate column widths dynamically for improved cycle times table
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[160, 100, 150])  # Original column widths
+    improved_cycle_column_widths = calculate_column_widths(improved_cycle_table_data)
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=improved_cycle_column_widths)
     improved_cycle_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
@@ -159,11 +183,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(improved_cycle_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # Build the PDF
+    # Finalize and build the PDF with the elements
     doc.build(elements)
-    pdf_output.seek(0)
-    
-    return pdf_output
 
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
