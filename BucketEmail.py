@@ -229,9 +229,9 @@ def send_email_with_pdf(email, pdf_bytes):
     msg['From'] = email_username  # Sender email
     msg['To'] = email
     
-    # Attach the PDF (now using the bytes directly)
+    # Attach the PDF (using bytes directly)
     part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_bytes)  # Use pdf_bytes directly
+    part.set_payload(pdf_bytes)  # Directly use the byte content (no need to call .getvalue() again)
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
@@ -517,11 +517,11 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 # Generate PDF with the results
                 pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
                 
-                # Ensure pdf_file is in bytes, pass the byte content directly
-                pdf_bytes = pdf_file.getvalue()  # Convert the PDF from BytesIO to bytes
+                # Get byte content from the PDF (make sure we are working with bytes)
+                pdf_bytes = pdf_file.getvalue()  # This should be the bytes, not the BytesIO object
 
                 # Send the email with the PDF attached
-                send_email_with_pdf(email, pdf_bytes)  # Pass pdf_bytes instead of pdf_file
+                send_email_with_pdf(email, pdf_bytes)  # Pass the bytes here
 
                 st.success("Please check your inbox!")
                 sheet.append_row([email])  # Add email to the Google Sheet
@@ -532,7 +532,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 st.error(f"An error occurred: {e}")
         else:
             st.error("Please enter a valid email address.")
-
+            
 # Connect to Google Sheets
 try:
     sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
