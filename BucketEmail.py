@@ -230,7 +230,7 @@ def send_email_with_pdf(email, pdf_file):
     # Send the email (using SMTP)
     try:
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login("bucketontrac@gmail.com", "albs gdyi jqzn fxgl")
+            smtp.login("bucketontrac@gmail.com", "")
             server.sendmail(msg['From'], msg['To'], msg.as_string())
     except Exception as e:
         print(f"Failed to send email: {e}")
