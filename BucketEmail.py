@@ -32,13 +32,19 @@ def add_section_title(title, df):
 
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
-    pdf_output = io.BytesIO()
+    pdf_output = BytesIO()
 
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
-    
-    # Create the canvas to allow custom background drawing
-    doc.build(lambda canvas, doc: add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df))
+
+    # Prepare the flowables (content) to add to the PDF
+    elements = []
+
+    # Add background and content
+    add_background(None, None, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, elements)
+
+    # Build the PDF
+    doc.build(elements)
 
     pdf_output.seek(0)
     return pdf_output
