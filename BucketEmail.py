@@ -36,24 +36,31 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     styles = getSampleStyleSheet()
     title_style = styles['Title']
     heading_style = styles['Heading1']
+    subheading_style = styles['Heading2']
     normal_style = styles['Normal']
     
-    # Custom Title Style
+    # Custom styles for dark mode
     title_style.fontSize = 22
     title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
+    
     heading_style.fontSize = 18
-    heading_style.textColor = colors.HexColor("#f4c542")
+    heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
+    
+    subheading_style.fontSize = 14
+    subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
+    subheading_style.underline = True  # Underline subheadings
+    
     normal_style.fontSize = 10  # Small text for normal content
+    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
     
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
-    # 2️⃣ Add Table Header
+    # 2️⃣ Add Comparison Table Section
     elements.append(Paragraph("Comparison Table", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the table title
+    elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Extract column headers
     headers = list(comparison_df.columns)
     data = [headers]  # Add header row to the data
     
@@ -70,59 +77,84 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
                 row['% Difference']
             ])
     
-    # 3️⃣ Create table and style it
     table = Table(data, colWidths=[110, 70, 70, 70, 70])  # Adjust column widths as needed
     table.setStyle(TableStyle([
-        # Header Row Style
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Center align for header
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding for header
+        # Header row style
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         
-        # Subheading Row Style
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#555555")),  # Subheading background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#ffffff")),  # Subheading text color
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),  # Bold font for subheadings
+        # Subheading row style
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#555555")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#ffffff")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),
         ('SPAN', (0, 1), (-1, 1)),  # Merge all columns for subheading row
         
-        # Default Row Styles
-        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#1e1e1e")),  # Default row background
-        ('TEXTCOLOR', (0, 2), (-1, -1), colors.HexColor("#e0e0e0")),  # Row text color
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Table border
-        ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),  # Default row font
-        ('FONTSIZE', (0, 2), (-1, -1), 10),  # Font size for all text
-
-        # Alternating Row Color
+        # Default row styles
+        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 2), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 2), (-1, -1), 10),
         ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
     ]))
     
-    # 4️⃣ Add table to PDF
     elements.append(table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add User Input Section
-    elements.append(Paragraph("User Input Data", heading_style))
+    # 3️⃣ Add User Input Section
+    elements.append(Paragraph("User Input Data", subheading_style))  # Subheading with underline
     elements.append(Spacer(1, 8))  # Space below section title
     
     for key, value in user_data.items():
         elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
     elements.append(Spacer(1, 20))  # Space below user data section
 
-    # 6️⃣ Add Optimal Bucket Information Section
-    elements.append(Paragraph("Optimal Bucket Information", heading_style))
+    # 4️⃣ Add Optimal Bucket Information Section
+    elements.append(Paragraph("Optimal Bucket Information", subheading_style))  # Subheading with underline
     elements.append(Spacer(1, 8))  # Space below section title
     
     for key, value in optimal_bucket.items():
         elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
     elements.append(Spacer(1, 20))  # Space below optimal bucket section
 
-    # 7️⃣ Add closing message
-    closing_text = "Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!"
-    elements.append(Paragraph(closing_text, normal_style))
+    # 5️⃣ Add Additional Notes Section (Optional)
+    elements.append(Paragraph("Additional Notes", subheading_style))  # Subheading with underline
+    elements.append(Spacer(1, 8))  # Space below section title
     
+    elements.append(Paragraph(
+        "This document illustrates the significant difference between the maximum reach and the maximum payload positions of large hydraulic excavators. "
+        "At maximum reach, the bucket is angled in a manner that reduces its effective volume significantly below the heaped capacity, thereby decreasing the total suspended load.",
+        normal_style
+    ))
+    elements.append(Spacer(1, 20))  # Space below notes section
+
+    # 6️⃣ Add Closing Message
+    elements.append(Paragraph(
+        "Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!",
+        normal_style
+    ))
+
+    # 7️⃣ Set the background to dark mode for the entire document
+    doc.pagesize = letter
+    doc.topMargin = 30
+    doc.bottomMargin = 30
+    doc.leftMargin = 30
+    doc.rightMargin = 30
+    
+    # Create a custom background color
+    from reportlab.lib.colors import black
+    from reportlab.platypus import PageBreak
+
+    # Apply a black background to each page
+    def set_dark_background(canvas, doc):
+        canvas.setFillColor(black)
+        canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
+
     # Build the PDF
-    doc.build(elements)
+    doc.build(elements, onFirstPage=set_dark_background, onLaterPages=set_dark_background)
     pdf_output.seek(0)
     return pdf_output
     
