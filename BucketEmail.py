@@ -505,7 +505,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
             pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
             
             # Send the email with the PDF attached
-            send_email_with_pdf(email, pdf_file, email_username, email_password, smtp_server, smtp_port)
+            send_email_with_pdf(email, pdf_file)
 
             st.success("Please check your inbox!")
             try:
