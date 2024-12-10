@@ -479,14 +479,13 @@ def send_email_with_pdf(email, pdf_file):
     # Create the email object
     mail = Mail(from_email, to_email, subject, content)
     
-    # Read and encode the PDF file as base64
+    # Read the PDF file and attach it directly without base64 encoding
     with open(pdf_file, 'rb') as pdf:
         pdf_content = pdf.read()
-    encoded_file = base64.b64encode(pdf_content).decode('utf-8')
     
-    # Create the attachment object
+    # Create the attachment object (no base64 encoding)
     attachment = Attachment(
-        file_content=encoded_file,
+        file_content=pdf_content,
         file_type='application/pdf',
         file_name='comparison.pdf',
         disposition='attachment'
