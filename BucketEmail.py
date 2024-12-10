@@ -828,7 +828,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                     st.write(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.")
                     st.write(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg")
 
-            return final_df
+            return final_df, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
 def collect_email(sheet, user_data, optimal_bucket, comparison_df):
     """Collect the user's email and store it in the Google Sheet."""
