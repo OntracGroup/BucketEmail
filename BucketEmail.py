@@ -579,75 +579,111 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         
     
     
-            # Create a DataFrame for the comparison table
-            data = {
-            'Description': [
-                'Side-By-Side Bucket Comparison', 'Capacity (m³)', 'Material Density (kg/m³)', 'Bucket Payload (kg)', 
-                'Total Suspended Load (kg)', '', 
-                'Loadout Productivity & Truck Pass Simulation', 'Dump Truck Payload (kg)', 'Avg No. Swings to Fill Truck', 
-                'Time to Fill Truck (min)', 'Avg Trucks/Hour @ 75% eff', 'Swings/Hour', 'Tonnes/Hour', '', 
-                '1000 Swings Side-By-Side Simulation','Number of Swings', 'Tonnes/hr', 'Total Volume (m³)', 
-                'Total Tonnes', 'Total Trucks', '', 
-                '10% Improved Cycle Time Simulation','Number of Swings', 'Tonnes/hr', 'Total Volume (m³)', 
-                'Total Tonnes', 'Total Trucks'
-            ],
-            'OLD Bucket': [
-                '', f"{old_capacity:.1f}", f"{user_data['material_density']:.0f}", f"{old_payload:.0f}", 
-                f"{old_total_load:.0f}", '', 
-                '', f"{dump_truck_payload:.0f}", f"{swings_to_fill_truck_old:.1f}", 
-                f"{time_to_fill_truck_old:.1f}", f"{avg_trucks_per_hour_old:.1f}", f"{swings_per_hour_old:.0f}", f"{truck_tonnage_per_hour_old:.0f}", '', '', 
-                '1000', f"{total_tonnage_per_hour_old:.0f}", f"{total_m3_per_day_old:.0f}", 
-                f"{total_tonnage_per_day_old:.0f}", f"{total_trucks_per_day_old:.0f}", '', '',
-                '1000', f"{total_tonnage_per_hour_old:.0f}", f"{total_m3_per_day_old:.0f}", 
-                f"{total_tonnage_per_day_old:.0f}", f"{total_trucks_per_day_old:.0f}"
-            ],
-            'New Bucket': [
-                '', f"{new_capacity:.1f}", f"{user_data['material_density']:.0f}", f"{new_payload:.0f}", 
-                f"{new_total_load:.0f}", '', 
-                '', f"{dump_truck_payload:.0f}", f"{swings_to_fill_truck_new:.1f}", 
-                f"{time_to_fill_truck_new:.1f}", f"{avg_trucks_per_hour_new:.1f}", f"{swings_per_hour_new:.0f}", f"{truck_tonnage_per_hour_new:.0f}", '', '',
-                '1000', f"{total_tonnage_per_hour_new:.0f}", f"{total_m3_per_day_new:.0f}", 
-                f"{total_tonnage_per_day_new:.0f}", f"{total_trucks_per_day_new:.0f}", '', '',
-                '1100', f"{1.1 * total_tonnage_per_hour_new:.0f}", f"{1.1 * total_m3_per_day_new:.0f}", 
-                f"{1.1 * total_tonnage_per_day_new:.0f}", f"{1.1 * total_trucks_per_day_new:.0f}"
-            ],
-            'Difference': [
-                '', f"{new_capacity - old_capacity:.1f}", '-', f"{new_payload - old_payload:.0f}", 
-                f"{new_total_load - old_total_load:.0f}", '', 
-                '', '-', f"{swings_to_fill_truck_new - swings_to_fill_truck_old:.1f}", 
-                f"{time_to_fill_truck_new - time_to_fill_truck_old:.1f}", 
-                f"{avg_trucks_per_hour_new - avg_trucks_per_hour_old:.1f}", 
-                f"{swings_per_hour_new - swings_per_hour_old:.0f}", 
-                f"{truck_tonnage_per_hour_new - truck_tonnage_per_hour_old:.0f}", 
-                '', '', '-',f"{total_tonnage_per_hour_new - total_tonnage_per_hour_old:.0f}", 
-                f"{total_m3_per_day_new - total_m3_per_day_old:.0f}", 
-                f"{total_tonnage_per_day_new - total_tonnage_per_day_old:.0f}", 
-                f"{total_trucks_per_day_new - total_trucks_per_day_old:.0f}", '', 
-                '', '100', f"{1.1 * total_tonnage_per_hour_new - total_tonnage_per_hour_old:.0f}", 
-                f"{1.1 * total_m3_per_day_new - total_m3_per_day_old:.0f}", 
-                f"{1.1 * total_tonnage_per_day_new - total_tonnage_per_day_old:.0f}", 
-                f"{1.1 * total_trucks_per_day_new - total_trucks_per_day_old:.0f}"
-            ],
-            '% Difference': [
-                '', f"{(new_payload - old_payload) / old_payload * 100:.0f}%", '-', f"{(new_payload - old_payload) / old_payload * 100:.0f}%", 
-                f"{(new_total_load - old_total_load) / old_total_load * 100:.0f}%", '', 
-                '', '-', f"{(swings_to_fill_truck_new - swings_to_fill_truck_old) / swings_to_fill_truck_old * 100:.0f}%", 
-                f"{(time_to_fill_truck_new - time_to_fill_truck_old) / time_to_fill_truck_old * 100:.0f}%", 
-                f"{(avg_trucks_per_hour_new - avg_trucks_per_hour_old) / avg_trucks_per_hour_old * 100:.0f}%",
-                f"{(swings_per_hour_new - swings_per_hour_old) / swings_per_hour_old * 100:.0f}%", 
-                f"{(truck_tonnage_per_hour_new - truck_tonnage_per_hour_old) / truck_tonnage_per_hour_old * 100:.0f}%", 
-                '', 
-                '','-', f"{(total_tonnage_per_hour_new - total_tonnage_per_hour_old) / total_tonnage_per_hour_old * 100:.0f}%", 
-                f"{(total_m3_per_day_new - total_m3_per_day_old) / total_m3_per_day_old * 100:.0f}%", 
-                f"{(total_tonnage_per_day_new - total_tonnage_per_day_old) / total_tonnage_per_day_old * 100:.0f}%", 
-                f"{(total_trucks_per_day_new - total_trucks_per_day_old) / total_trucks_per_day_old * 100:.0f}%", '', 
-                '','10%', f"{(1.1 * total_tonnage_per_hour_new - total_tonnage_per_hour_old) / total_tonnage_per_hour_old * 100:.0f}%", 
-                f"{(1.1 * total_m3_per_day_new - total_m3_per_day_old) / total_m3_per_day_old * 100:.0f}%", 
-                f"{(1.1 * total_tonnage_per_day_new - total_tonnage_per_day_old) / total_tonnage_per_day_old * 100:.0f}%", 
-                f"{(1.1 * total_trucks_per_day_new - total_trucks_per_day_old) / total_trucks_per_day_old * 100:.0f}%"
-            ]
-        }
-        # Function to add a title row
+           # Side-by-Side Bucket Comparison Data
+            side_by_side_data = {
+                'Description': [
+                     'Capacity (m³)', 'Material Density (kg/m³)', 'Bucket Payload (kg)', 
+                    'Total Suspended Load (kg)'
+                ],
+                'Old Bucket': [
+                     f"{old_capacity:.1f}", f"{user_data['material_density']:.0f}", f"{old_payload:.0f}", 
+                    f"{old_total_load:.0f}"
+                ],
+                'XMOR® Bucket': [
+                     f"{new_capacity:.1f}", f"{user_data['material_density']:.0f}", f"{new_payload:.0f}", 
+                    f"{new_total_load:.0f}"
+                ],
+                'Difference': [
+                     f"{new_capacity - old_capacity:.1f}", '-', f"{new_payload - old_payload:.0f}", 
+                    f"{new_total_load - old_total_load:.0f}"
+                ],
+                '% Difference': [
+                     f"{(new_capacity - old_capacity) / old_capacity * 100:.0f}%", '-', f"{(new_payload - old_payload) / old_payload * 100:.0f}%", 
+                    f"{(new_total_load - old_total_load) / old_total_load * 100:.0f}%"
+                ]
+            }
+            
+            # Loadout Productivity & Truck Pass Simulation Data
+            loadout_productivity_data = {
+                'Description': [
+                     f"{truck_brand} {truck_model} Payload (kg)", 'Avg No. Swings to Fill Truck', 
+                    'Time to Fill Truck (min)', 'Avg Trucks/Hour @ 75% eff', 'Swings/Hour', 'Tonnes/Hour'
+                ],
+                'Old Bucket': [
+                     f"{dump_truck_payload_old:.0f}{'*' if dump_truck_payload_old != dump_truck_payload else ''}", f"{swings_to_fill_truck_old:.1f}", 
+                    f"{time_to_fill_truck_old:.1f}", f"{avg_trucks_per_hour_old:.1f}", f"{swings_per_hour_old:.0f}", f"{truck_tonnage_per_hour_old:.0f}"
+                ],
+                'XMOR® Bucket': [
+                     f"{dump_truck_payload_new:.0f}{'*' if dump_truck_payload_new != dump_truck_payload else ''}", f"{swings_to_fill_truck_new:.1f}", 
+                    f"{time_to_fill_truck_new:.1f}", f"{avg_trucks_per_hour_new:.1f}", f"{swings_per_hour_new:.0f}", f"{truck_tonnage_per_hour_new:.0f}"
+                ],
+                'Difference': [
+                     f"{dump_truck_payload_new - dump_truck_payload_old:.0f}", f"{swings_to_fill_truck_new - swings_to_fill_truck_old:.1f}", 
+                    f"{time_to_fill_truck_new - time_to_fill_truck_old:.1f}", f"{avg_trucks_per_hour_new - avg_trucks_per_hour_old:.1f}",
+                    "-", f"{truck_tonnage_per_hour_new - truck_tonnage_per_hour_old:.0f}"
+                ],
+                '% Difference': [
+                     f"{(dump_truck_payload_new - dump_truck_payload_old) / dump_truck_payload_old * 100:.0f}%", 
+                    f"{(swings_to_fill_truck_new - swings_to_fill_truck_old) / swings_to_fill_truck_old * 100:.0f}%",
+                    f"{(time_to_fill_truck_new - time_to_fill_truck_old) / time_to_fill_truck_old * 100:.0f}%",
+                    f"{(avg_trucks_per_hour_new - avg_trucks_per_hour_old) / avg_trucks_per_hour_old * 100:.0f}%",
+                    "-",
+                    f"{(truck_tonnage_per_hour_new - truck_tonnage_per_hour_old) / truck_tonnage_per_hour_old * 100:.0f}%"
+                ]
+            }
+            
+            # 1000 Swings Side-by-Side Simulation Data
+            swings_simulation_data = {
+                'Description': [
+                     'Number of Swings', 'Total Volume (m³)', 
+                    'Total Tonnes', 'Total Trucks'
+                ],
+                'Old Bucket': [
+                    '1000', f"{total_m3_per_day_old:.0f}", f"{total_tonnage_per_day_old:.0f}", 
+                    f"{total_trucks_per_day_old:.0f}"
+                ],
+                'XMOR® Bucket': [
+                    '1000', f"{total_m3_per_day_new:.0f}", f"{total_tonnage_per_day_new:.0f}", 
+                    f"{total_trucks_per_day_new:.0f}"
+                ],
+                'Difference': [
+                    '-', f"{total_m3_per_day_new - total_m3_per_day_old:.0f}", 
+                    f"{total_tonnage_per_day_new - total_tonnage_per_day_old:.0f}", 
+                    f"{total_trucks_per_day_new - total_trucks_per_day_old:.0f}"
+                ],
+                '% Difference': [
+                    '-', f"{(total_m3_per_day_new - total_m3_per_day_old) / total_m3_per_day_old * 100:.0f}%", 
+                    f"{(total_tonnage_per_day_new - total_tonnage_per_day_old) / total_tonnage_per_day_old * 100:.0f}%", 
+                    f"{(total_trucks_per_day_new - total_trucks_per_day_old) / total_trucks_per_day_old * 100:.0f}%"
+                ]
+            }
+            
+            # 10% Improved Cycle Time Simulation Data
+            improved_cycle_data = {
+                'Description': [
+                     'Number of Swings', 'Total Volume (m³)', 
+                    'Total Tonnes', 'Total Trucks'
+                ],
+                'Old Bucket': [
+                    '1000', f"{total_m3_per_day_old:.0f}", f"{total_tonnage_per_day_old:.0f}", 
+                    f"{total_trucks_per_day_old:.0f}"
+                ],
+                'XMOR® Bucket': [
+                    '1100', f"{1.1 * total_m3_per_day_new:.0f}", f"{1.1 * total_tonnage_per_day_new:.0f}", 
+                    f"{1.1 * total_trucks_per_day_new:.0f}"
+                ],
+                'Difference': [
+                    '100', f"{1.1 * total_m3_per_day_new - total_m3_per_day_old:.0f}", 
+                    f"{1.1 * total_tonnage_per_day_new - total_tonnage_per_day_old:.0f}", 
+                    f"{1.1 * total_trucks_per_day_new - total_trucks_per_day_old:.0f}"
+                ],
+                '% Difference': [
+                    '10%', f"{(1.1 * total_m3_per_day_new - total_m3_per_day_old) / total_m3_per_day_old * 100:.0f}%", 
+                    f"{(1.1 * total_tonnage_per_day_new - total_tonnage_per_day_old) / total_tonnage_per_day_old * 100:.0f}%", 
+                    f"{(1.1 * total_trucks_per_day_new - total_trucks_per_day_old) / total_trucks_per_day_old * 100:.0f}%"
+                ]
+            }
+            # Function to add a title row
             def add_section_title(title, data):
                 # Create a DataFrame with the title row
                 title_row = pd.DataFrame([[title] + [''] * (len(data.columns) - 1)], columns=data.columns)
