@@ -24,8 +24,14 @@ import base64
 from PIL import Image
 import math
 
-def generate_pdf(user_data, optimal_bucket, comparison_df):
-    """Generate a polished PDF with user results similar to HTML design."""
+def add_section_title(title, df):
+    """Add a section title and return the dataframe with title as the first row."""
+    title_row = pd.DataFrame([[title] * len(df.columns)], columns=df.columns)
+    df_with_title = pd.concat([title_row, df], ignore_index=True)
+    return df_with_title
+
+def generate_pdf(side_by_side_data, loadout_productivity_data, swings_simulation_data, improved_cycle_data):
+    """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
     
     # Create the PDF document
@@ -57,89 +63,114 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
-    # 2️⃣ Add Comparison Table Section
-    elements.append(Paragraph("Comparison Table", heading_style))
+    # Convert the example data into DataFrames
+    side_by_side_df = pd.DataFrame(side_by_side_data)
+    loadout_productivity_df = pd.DataFrame(loadout_productivity_data)
+    swings_simulation_df = pd.DataFrame(swings_simulation_data)
+    improved_cycle_df = pd.DataFrame(improved_cycle_data)
+    
+    # Add section titles to the DataFrames
+    side_by_side_with_title = add_section_title("Side-by-Side Bucket Comparison", side_by_side_df)
+    loadout_productivity_with_title = add_section_title("Loadout Productivity & Truck Pass Simulation", loadout_productivity_df)
+    swings_simulation_with_title = add_section_title("1000 Swings Side-by-Side Simulation", swings_simulation_df)
+    improved_cycle_with_title = add_section_title("10% Improved Cycle Time Simulation", improved_cycle_df)
+    
+    # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
+    elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    headers = list(comparison_df.columns)
-    data = [headers]  # Add header row to the data
-    
-    # Extract table data with logic for subheadings
-    for index, row in comparison_df.iterrows():
-        if row['Description'].isupper():  # Assuming subheadings are in uppercase
-            data.append([f"<b>{row['Description']}</b>", "", "", "", ""])  # Subheading style
-        else:
-            data.append([row['Description'], row['Old Bucket'], row['XMOR® Bucket'], row['Difference'], row['% Difference']])
-    
-    table = Table(data, colWidths=[110, 70, 70, 70, 70])  # Adjust column widths as needed
-    table.setStyle(TableStyle([
-        # Header row style
+    # Convert DataFrame to table
+    side_by_side_table_data = [side_by_side_with_title.columns.to_list()] + side_by_side_with_title.values.tolist()
+    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_with_title.columns))  # Adjust column widths as needed
+    side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        
-        # Subheading row style
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#555555")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#ffffff")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),
-        ('SPAN', (0, 1), (-1, 1)),  # Merge all columns for subheading row
-        
-        # Default row styles
-        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 2), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Dark grid lines
-        ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 2), (-1, -1), 10),
-        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
-        ('ALIGN', (0, 2), (-1, -1), 'CENTER'),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
-    
-    elements.append(table)
+    elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 3️⃣ Add User Input Section
-    elements.append(Paragraph("User Input Data", subheading_style))  # Subheading with underline
-    elements.append(Spacer(1, 8))  # Space below section title
+    # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
+    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
+    elements.append(Spacer(1, 8))  # Space below the heading
     
-    for key, value in user_data.items():
-        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
-    elements.append(Spacer(1, 20))  # Space below user data section
+    # Convert DataFrame to table
+    loadout_productivity_table_data = [loadout_productivity_with_title.columns.to_list()] + loadout_productivity_with_title.values.tolist()
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_with_title.columns))
+    loadout_productivity_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+        ('PADDING', (0, 0), (-1, -1), 10),
+    ]))
+    elements.append(loadout_productivity_table)
+    elements.append(Spacer(1, 20))  # Space below the table
 
-    # 4️⃣ Add Optimal Bucket Information Section
-    elements.append(Paragraph("Optimal Bucket Information", subheading_style))  # Subheading with underline
-    elements.append(Spacer(1, 8))  # Space below section title
+    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
+    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
+    elements.append(Spacer(1, 8))  # Space below the heading
     
-    for key, value in optimal_bucket.items():
-        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
-    elements.append(Spacer(1, 20))  # Space below optimal bucket section
+    # Convert DataFrame to table
+    swings_simulation_table_data = [swings_simulation_with_title.columns.to_list()] + swings_simulation_with_title.values.tolist()
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_with_title.columns))
+    swings_simulation_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+        ('PADDING', (0, 0), (-1, -1), 10),
+    ]))
+    elements.append(swings_simulation_table)
+    elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Additional Notes Section (Optional)
-    elements.append(Paragraph("Additional Notes", subheading_style))  # Subheading with underline
-    elements.append(Spacer(1, 8))  # Space below section title
+    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
+    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
+    elements.append(Spacer(1, 8))  # Space below the heading
     
-    elements.append(Paragraph(
-        "This document illustrates the significant difference between the maximum reach and the maximum payload positions of large hydraulic excavators. "
-        "At maximum reach, the bucket is angled in a manner that reduces its effective volume significantly below the heaped capacity, thereby decreasing the total suspended load.",
-        normal_style
-    ))
-    elements.append(Spacer(1, 20))  # Space below notes section
+    # Convert DataFrame to table
+    improved_cycle_table_data = [improved_cycle_with_title.columns.to_list()] + improved_cycle_with_title.values.tolist()
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_with_title.columns))
+    improved_cycle_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
+        ('PADDING', (0, 0), (-1, -1), 10),
+    ]))
+    elements.append(improved_cycle_table)
+    elements.append(Spacer(1, 20))  # Space below the table
 
-    # 6️⃣ Add Closing Message
-    elements.append(Paragraph(
-        "Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!",
-        normal_style
-    ))
-
-    # 7️⃣ Set the background to dark mode for the entire document
-    doc.pagesize = letter
-    doc.topMargin = 30
-    doc.bottomMargin = 30
-    doc.leftMargin = 30
-    doc.rightMargin = 30
-    
     # Build the PDF
     doc.build(elements)
     pdf_output.seek(0)
