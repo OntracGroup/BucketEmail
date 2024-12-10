@@ -64,10 +64,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Spacer(1, 12))  # Space below the title
 
     # Convert the example data into DataFrames
-    side_by_side_df = pd.DataFrame(side_by_side_data)
-    loadout_productivity_df = pd.DataFrame(loadout_productivity_data)
-    swings_simulation_df = pd.DataFrame(swings_simulation_data)
-    improved_cycle_df = pd.DataFrame(improved_cycle_data)
+    #side_by_side_df = pd.DataFrame(side_by_side_data)
+    #loadout_productivity_df = pd.DataFrame(loadout_productivity_data)
+    #swings_simulation_df = pd.DataFrame(swings_simulation_data)
+    #improved_cycle_df = pd.DataFrame(improved_cycle_data)
     
     # Add section titles to the DataFrames
     side_by_side_with_title = add_section_title("Side-by-Side Bucket Comparison", side_by_side_df)
