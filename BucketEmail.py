@@ -33,7 +33,7 @@ def add_section_title(title, df):
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
-    
+
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
     elements = []  # List of all elements to be added to the PDF
@@ -59,10 +59,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     normal_style.fontSize = 10  # Small text for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
     
-    # Background color for dark mode
-    background_color = colors.HexColor("#121212")
-    page_background_color = colors.HexColor("#121212")  # Set the entire page background to dark mode
-    
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
@@ -71,18 +67,18 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Remove redundant title row and create table data
+    # Modify the table and use specific widths for columns
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths=[215, 90, 160])  # Wider description column
+    side_by_side_table = Table(side_by_side_table_data, colWidths=[200, 100, 150])  # Wider description column only
     side_by_side_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), background_color),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -95,18 +91,18 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Remove redundant title row and create table data
+    # Modify the table and use original column widths
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[160, 90, 160])  # Keeping the original widths
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[160, 100, 150])  # Original column widths
     loadout_productivity_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), background_color),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -119,18 +115,18 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Remove redundant title row and create table data
+    # Modify the table and use original column widths
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[160, 90, 160])  # Keeping the original widths
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[160, 100, 150])  # Original column widths
     swings_simulation_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), background_color),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -143,18 +139,18 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Remove redundant title row and create table data
+    # Modify the table and use original column widths
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[160, 90, 160])  # Keeping the original widths
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[160, 100, 150])  # Original column widths
     improved_cycle_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), background_color),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -168,8 +164,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     pdf_output.seek(0)
     
     return pdf_output
-
-
 
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
