@@ -24,18 +24,6 @@ import base64
 from PIL import Image
 import math
 
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-
-from reportlab.lib.pagesizes import letter
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-
 def generate_pdf(user_data, optimal_bucket, comparison_df):
     """Generate a polished PDF with user results similar to HTML design."""
     pdf_output = io.BytesIO()
@@ -81,13 +69,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
         if row['Description'].isupper():  # Assuming subheadings are in uppercase
             data.append([f"<b>{row['Description']}</b>", "", "", "", ""])  # Subheading style
         else:
-            data.append([
-                row['Description'],
-                row['Old Bucket'],
-                row['XMOR® Bucket'],
-                row['Difference'],
-                row['% Difference']
-            ])
+            data.append([row['Description'], row['Old Bucket'], row['XMOR® Bucket'], row['Difference'], row['% Difference']])
     
     table = Table(data, colWidths=[110, 70, 70, 70, 70])  # Adjust column widths as needed
     table.setStyle(TableStyle([
@@ -107,7 +89,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
         # Default row styles
         ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 2), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Dark grid lines
         ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 2), (-1, -1), 10),
         ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
