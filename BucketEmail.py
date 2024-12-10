@@ -36,27 +36,26 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     pdf_filename = "/path/to/your/output.pdf"
     
     # Create a SimpleDocTemplate to generate the PDF
-    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    doc = SimpleDocTemplate(pdf_filename, pagesize=letter, onFirstPage=add_background, onLaterPages=add_background)
     
     # Initialize the elements list
     elements = []
 
-    # Call the function to add content and background to the PDF
-    add_background(doc, elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
+    # Add content to the PDF
+    add_content(elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
     
     # Finalize the PDF
     doc.build(elements)
     return pdf_filename
 
-
-def add_background(doc, elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    """Add a dark background and structured content to the PDF page."""
+def add_background(canvas, doc):
+    """Add a dark background to the first page."""
     # Set the background color to dark
-    if doc:
-        canvas = doc.canv
-        canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
-        canvas.rect(0, 0, letter[0], letter[1], fill=True)
+    canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
+    canvas.rect(0, 0, letter[0], letter[1], fill=True)
 
+def add_content(elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+    """Add the content and tables to the PDF."""
     # Prepare styles
     styles = getSampleStyleSheet()
     title_style = styles['Title']
