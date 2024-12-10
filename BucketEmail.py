@@ -6,11 +6,12 @@
 import streamlit as st
 import pandas as pd
 import smtplib
-from email.message import EmailMessage
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import io
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
-import io
 import gspread
 from fpdf import FPDF
 from google.oauth2.service_account import Credentials
