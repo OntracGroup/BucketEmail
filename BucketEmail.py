@@ -207,7 +207,6 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
-    # Retrieve email credentials from Streamlit secrets
     email_username = st.secrets["email"]["email_username"]
     email_password = st.secrets["email"]["email_password"]
     smtp_server = st.secrets["email"]["smtp_server"]
@@ -217,7 +216,7 @@ def send_email_with_pdf(email, pdf_file):
     msg['Subject'] = 'Your ONTRAC Excavator Results'
     msg['From'] = email_username
     msg['To'] = email
-    
+
     part = MIMEBase('application', 'octet-stream')
     part.set_payload(pdf_file.read())
     encoders.encode_base64(part)
@@ -226,11 +225,13 @@ def send_email_with_pdf(email, pdf_file):
 
     try:
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
+            print("Attempting to send email...")
             smtp.login(email_username, email_password)
             smtp.sendmail(msg['From'], msg['To'], msg.as_string())
-        print("Email sent successfully")
+            print("Email sent successfully")
     except Exception as e:
         print(f"Failed to send email: {e}")
+        st.error(f"Failed to send email: {e}")  # Show error in Streamlit UI
         
 # Main Streamlit App UI
 def app():
@@ -503,11 +504,10 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
             
             # Generate PDF with the results
             pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
-            
             # Send the email with the PDF attached
             send_email_with_pdf(email, pdf_file)
-
             st.success("Please check your inbox!")
+            
             try:
                 sheet.append_row([email])  # Add email to the Google Sheet
                 
