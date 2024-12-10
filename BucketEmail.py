@@ -63,25 +63,13 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
-    # Convert the example data into DataFrames
-    #side_by_side_df = pd.DataFrame(side_by_side_data)
-    #loadout_productivity_df = pd.DataFrame(loadout_productivity_data)
-    #swings_simulation_df = pd.DataFrame(swings_simulation_data)
-    #improved_cycle_df = pd.DataFrame(improved_cycle_data)
-    
-    # Add section titles to the DataFrames
-    side_by_side_with_title = add_section_title("Side-by-Side Bucket Comparison", side_by_side_df)
-    loadout_productivity_with_title = add_section_title("Loadout Productivity & Truck Pass Simulation", loadout_productivity_df)
-    swings_simulation_with_title = add_section_title("1000 Swings Side-by-Side Simulation", swings_simulation_df)
-    improved_cycle_with_title = add_section_title("10% Improved Cycle Time Simulation", improved_cycle_df)
-    
     # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Convert DataFrame to table
-    side_by_side_table_data = [side_by_side_with_title.columns.to_list()] + side_by_side_with_title.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_with_title.columns))  # Adjust column widths as needed
+    # Remove redundant title row and create table data
+    side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
+    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_df.columns))  # Adjust column widths as needed
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -103,9 +91,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Convert DataFrame to table
-    loadout_productivity_table_data = [loadout_productivity_with_title.columns.to_list()] + loadout_productivity_with_title.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_with_title.columns))
+    # Remove redundant title row and create table data
+    loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_df.columns))
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -127,9 +115,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Convert DataFrame to table
-    swings_simulation_table_data = [swings_simulation_with_title.columns.to_list()] + swings_simulation_with_title.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_with_title.columns))
+    # Remove redundant title row and create table data
+    swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_df.columns))
     swings_simulation_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -151,9 +139,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Convert DataFrame to table
-    improved_cycle_table_data = [improved_cycle_with_title.columns.to_list()] + improved_cycle_with_title.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_with_title.columns))
+    # Remove redundant title row and create table data
+    improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_df.columns))
     improved_cycle_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -174,6 +162,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Build the PDF
     doc.build(elements)
     pdf_output.seek(0)
+    
     return pdf_output
 
 
