@@ -30,7 +30,7 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-def generate_pdf(side_by_side_data, loadout_productivity_data, swings_simulation_data, improved_cycle_data):
+def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
     
