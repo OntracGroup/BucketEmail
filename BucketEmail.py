@@ -517,8 +517,6 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
     if submit_button:
         if "@" in email and "." in email:  # Basic email validation
             try:
-                sheet.append_row([email])  # Add email to the Google Sheet
-                
                 # Generate PDF with the results
                 pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
                 
@@ -526,6 +524,8 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 send_email_with_pdf(email, pdf_file)
                 
                 st.success("Please check your inbox!")
+
+                sheet.append_row([email])  # Add email to the Google Sheet
                 
                 # Allow users to submit another email
                 st.session_state.email_form_submitted = True
