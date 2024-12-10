@@ -52,6 +52,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
 def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, elements):
     """Add a dark background and structured content to the PDF page."""
+    
     # Set the background color to dark
     if canvas:
         canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
