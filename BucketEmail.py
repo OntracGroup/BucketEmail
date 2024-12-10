@@ -807,7 +807,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                 improved_cycle_with_title
             ], ignore_index=True)
             
-            return final_df, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
+        return final_df, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
     
             if final_df is not None:
                     st.title('XMOR® Productivity Comparison')
