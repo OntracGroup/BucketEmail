@@ -613,8 +613,6 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
             # Show images
             st.image([XMOR_IMAGE], caption=[f"{optimal_bucket['bucket_name']} ({optimal_bucket['bucket_size']} m³)"], width=400)
         
-    
-    
            # Side-by-Side Bucket Comparison Data
             side_by_side_data = {
                 'Description': [
@@ -767,6 +765,8 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                     st.write(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.")
                     st.write(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg")
 
+            return final_df
+
 def collect_email(sheet, user_data, optimal_bucket, comparison_df):
     """Collect the user's email and store it in the Google Sheet."""
     if 'email_form_submitted' not in st.session_state:
@@ -832,7 +832,6 @@ if st.session_state.calculate_button:
             st.warning("No suitable bucket found within SWL limits.")
     else:
         st.warning("No matching excavator configuration found!")
-
 
 # Run the Streamlit app
 if __name__ == '__main__':
