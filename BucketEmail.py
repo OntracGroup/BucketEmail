@@ -884,7 +884,7 @@ if st.session_state.calculate_button:
         if optimal_bucket:
             # Generate DataFrame for comparison
             comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
-            
+            side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df = comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
             pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
             
             # Ask for email after successful calculation
