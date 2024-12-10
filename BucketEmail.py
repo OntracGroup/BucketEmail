@@ -513,17 +513,17 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
         
     if submit_button:
         if "@" in email and "." in email:  # Basic email validation
+            # Generate PDF with the results
+            pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
+            
+            # Get byte content from the PDF (make sure we are working with bytes)
+            pdf_bytes = pdf_file.getvalue()  # This should be the bytes, not the BytesIO object
+
+            # Send the email with the PDF attached
+            send_email_with_pdf(email, pdf_bytes)  # Pass the bytes here
+
+            st.success("Please check your inbox!")
             try:
-                # Generate PDF with the results
-                pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
-                
-                # Get byte content from the PDF (make sure we are working with bytes)
-                pdf_bytes = pdf_file.getvalue()  # This should be the bytes, not the BytesIO object
-
-                # Send the email with the PDF attached
-                send_email_with_csv(email, pdf_bytes)  # Pass the bytes here
-
-                st.success("Please check your inbox!")
                 sheet.append_row([email])  # Add email to the Google Sheet
                 
                 # Allow users to submit another email
