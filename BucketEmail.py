@@ -69,7 +69,19 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data)  # Let ReportLab handle column widths
+    
+    # Set a minimum table width (e.g., 500 units) and allow columns to adjust
+    min_table_width = 500
+    num_columns = len(side_by_side_df.columns)
+    total_col_width = sum([90] * num_columns)  # Sum of the default column widths
+    # Adjust column widths if necessary to achieve minimum table width
+    if total_col_width < min_table_width:
+        extra_width = min_table_width - total_col_width
+        adjusted_widths = [90 + extra_width / num_columns] * num_columns
+    else:
+        adjusted_widths = [90] * num_columns  # Default column widths
+    
+    side_by_side_table = Table(side_by_side_table_data, colWidths=adjusted_widths)
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -87,83 +99,70 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
-    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
+    # 3️⃣ Add Section 2: Loadout Productivity
+    elements.append(Paragraph("Loadout Productivity", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data)  # Let ReportLab handle column widths
+    loadout_productivity_table = Table(loadout_productivity_table_data)
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
-    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
+    # 4️⃣ Add Section 3: Swings Simulation
+    elements.append(Paragraph("Swings Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data)  # Let ReportLab handle column widths
+    swings_simulation_table = Table(swings_simulation_table_data)
     swings_simulation_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
+    # 5️⃣ Add Section 4: Improved Cycle
+    elements.append(Paragraph("Improved Cycle", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data)  # Let ReportLab handle column widths
+    improved_cycle_table = Table(improved_cycle_table_data)
     improved_cycle_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(improved_cycle_table)
     
-    # Build the PDF document
+    # Build the PDF
     doc.build(elements)
     pdf_output.seek(0)
     
     return pdf_output
-
 
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
