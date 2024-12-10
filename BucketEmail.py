@@ -12,7 +12,6 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
 import io
-from io import BytesIO
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
@@ -32,42 +31,21 @@ def add_section_title(title, df):
     return df_with_title
 
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    # Create a PDF file path
-    pdf_filename = "output.pdf"
+    """Generate a polished PDF with user results and separate tables for each section."""
+    pdf_output = io.BytesIO()
     
-    # Create a SimpleDocTemplate to generate the PDF
-    doc = SimpleDocTemplate(pdf_filename, pagesize=letter, onFirstPage=add_background)
+    # Create the PDF document
+    doc = SimpleDocTemplate(pdf_output, pagesize=letter)
+    elements = []  # List of all elements to be added to the PDF
     
-    # Initialize the elements list
-    elements = []
-
-    # Add content to the PDF
-    add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
-    
-    # Finalize the PDF
-    doc.build(elements)
-    return pdf_filename
-
-def add_background(canvas, doc):
-    """Add a dark background to the first page."""
-    canvas.setFillColor(colors.HexColor("#121212"))  # Dark background color
-    canvas.rect(0, 0, letter[0], letter[1], fill=True)  # Draw rectangle to fill the entire page
-
-def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    #"""Add structured content and tables to the PDF."""
-    # Initialize the PDF document
-    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
-
-    # Create the elements list that will hold all content for the document
-    elements = []
-    # Prepare styles
+    # Set up document styles
     styles = getSampleStyleSheet()
     title_style = styles['Title']
     heading_style = styles['Heading1']
     subheading_style = styles['Heading2']
     normal_style = styles['Normal']
     
-    # Customize styles for dark mode
+    # Custom styles for dark mode
     title_style.fontSize = 22
     title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
     
@@ -78,29 +56,29 @@ def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_s
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
     subheading_style.underline = True  # Underline subheadings
     
-    normal_style.fontSize = 10
-    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color
-
-    # Add Title
+    normal_style.fontSize = 10  # Small text for normal content
+    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
+    
+    # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
-    # Add Section 1: Side-by-Side Bucket Comparison
+    # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Add table for side-by-side comparison
+    # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data)
-    side_by_side_table.setStyle(TableStyle([  # Table styling
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
+    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_df.columns))  # Adjust column widths as needed
+    side_by_side_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -109,22 +87,22 @@ def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_s
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 3️⃣ Add Section 2: Loadout Productivity (example)
-    elements.append(Paragraph("Loadout Productivity", heading_style))
+    # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
+    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
-
-    # Example of adding another table (same format as above)
+    
+    # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data)
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_df.columns))
     loadout_productivity_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -133,22 +111,22 @@ def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_s
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 4️⃣ Add Section 3: Swings Simulation
-    elements.append(Paragraph("Swings Simulation", heading_style))
+    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
+    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Create the swings simulation table
+    # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data)
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_df.columns))
     swings_simulation_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -157,22 +135,22 @@ def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_s
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Section 4: Improved Cycle Times
-    elements.append(Paragraph("Improved Cycle Times", heading_style))
+    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
+    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Create the improved cycle table
+    # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data)
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_df.columns))
     improved_cycle_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
@@ -181,10 +159,14 @@ def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_s
     elements.append(improved_cycle_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # Finalize and build the PDF with the elements
+    # Build the PDF
     doc.build(elements)
+    pdf_output.seek(0)
+    
+    return pdf_output
 
 
+    
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
     increment = dump_truck_payload * 0.001   # Fine adjustment increments
@@ -462,7 +444,6 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
-    
     # Retrieve SendGrid credentials from Streamlit secrets
     sendgrid_api_key = st.secrets["sendgrid"]["api_key"]
     from_email = st.secrets["sendgrid"]["from_email"]
@@ -479,18 +460,13 @@ def send_email_with_pdf(email, pdf_file):
     # Create the email object
     mail = Mail(from_email, to_email, subject, content)
     
-    try:
-        # Read and encode the PDF file as base64
-        with open(pdf_file, 'rb') as pdf:
-            pdf_content = pdf.read()
-        encoded_file = base64.b64encode(pdf_content).decode('utf-8')
-    except Exception as e:
-        print(f"Error reading PDF file: {e}")
-        return
+    # Read and encode the PDF file as base64
+    pdf_content = pdf_file.read()
+    encoded_file = base64.b64encode(pdf_content).decode('utf-8')
     
-    # Create the attachment object (no base64 encoding)
+    # Create the attachment object
     attachment = Attachment(
-        file_content=pdf_content,
+        file_content=encoded_file,
         file_type='application/pdf',
         file_name='comparison.pdf',
         disposition='attachment'
@@ -902,7 +878,7 @@ if st.session_state.calculate_button:
             
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
-                st.subheader('Would you like a side-by-side comparison sent to your email?')
+                st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>', unsafe_allow_html=True)
                 collect_email(sheet, user_data, optimal_bucket, comparison_df)
         else:
             st.warning("No suitable bucket found within SWL limits.")
