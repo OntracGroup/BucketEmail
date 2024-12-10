@@ -4,5 +4,4 @@ google-auth
 google-auth-oauthlib
 fpdf
 reportlab
-smtplib
 oauth2client
