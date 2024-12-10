@@ -15,6 +15,8 @@ from email import encoders
 import gspread
 from fpdf import FPDF
 from google.oauth2.service_account import Credentials
+import sendgrid
+from sendgrid.helpers.mail import Mail, Email, To, Content
 
 def generate_pdf(user_data, optimal_bucket, comparison_df):
     pdf_output = io.BytesIO()
@@ -207,31 +209,34 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
-    email_username = st.secrets["email"]["email_username"]
-    email_password = st.secrets["email"]["email_password"]
-    smtp_server = st.secrets["email"]["smtp_server"]
-    smtp_port = st.secrets["email"]["smtp_port"]
+    # Retrieve SendGrid credentials from Streamlit secrets
+    sendgrid_api_key = st.secrets["sendgrid"]["api_key"]
+    from_email = st.secrets["sendgrid"]["from_email"]
 
-    msg = MIMEMultipart()
-    msg['Subject'] = 'Your ONTRAC Excavator Results'
-    msg['From'] = email_username
-    msg['To'] = email
+    # Create the SendGrid client
+    sg = sendgrid.SendGridAPIClient(api_key=sendgrid_api_key)
 
-    part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_file.read())
-    encoders.encode_base64(part)
-    part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
-    msg.attach(part)
+    # Create the email
+    mail = Mail(from_email, to_email, subject, content)
+    
+    # Attach the PDF file
+    attachment = {
+        "content": pdf_file.read().decode("latin1"),
+        "type": "application/pdf",
+        "filename": "comparison.pdf",
+        "disposition": "attachment"
+    }
+    mail.attachment = attachment
 
+    # Send the email
     try:
-        with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
-            print("Attempting to send email...")
-            smtp.login(email_username, email_password)
-            smtp.sendmail(msg['From'], msg['To'], msg.as_string())
+        response = sg.send(mail)
+        if response.status_code == 202:
             print("Email sent successfully")
+        else:
+            print(f"Failed to send email: {response.status_code}")
     except Exception as e:
         print(f"Failed to send email: {e}")
-        st.error(f"Failed to send email: {e}")  # Show error in Streamlit UI
         
 # Main Streamlit App UI
 def app():
