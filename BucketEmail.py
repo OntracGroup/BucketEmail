@@ -54,7 +54,12 @@ def add_background(canvas, doc):
     canvas.rect(0, 0, letter[0], letter[1], fill=True)  # Draw rectangle to fill the entire page
 
 def add_content(elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    """Add the content and tables to the PDF."""
+    #"""Add structured content and tables to the PDF."""
+    # Initialize the PDF document
+    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+
+    # Create the elements list that will hold all content for the document
+    elements = []
     # Prepare styles
     styles = getSampleStyleSheet()
     title_style = styles['Title']
