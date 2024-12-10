@@ -206,7 +206,7 @@ def send_email_with_csv(email, csv_data):
         
         # Send the email
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login("bucketontrac@gmail.com", "albs gdyi jqzn fxgl")
+            smtp.login("", "")
             smtp.send_message(msg)
         st.success("Email sent successfully!")
          
@@ -215,9 +215,15 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
+    # Retrieve email credentials from Streamlit secrets
+    email_username = st.secrets["email"]["email_username"]
+    email_password = st.secrets["email"]["email_password"]
+    smtp_server = st.secrets["email"]["smtp_server"]
+    smtp_port = st.secrets["email"]["smtp_port"]
+
     msg = MIMEMultipart()
     msg['Subject'] = 'Your ONTRAC Excavator Results'
-    msg['From'] = st.secrets["email_username"]  # Sender email
+    msg['From'] = email_username  # Sender email
     msg['To'] = email
     
     # Attach the PDF (convert the BytesIO object to bytes)
@@ -229,9 +235,10 @@ def send_email_with_pdf(email, pdf_file):
 
     # Send the email (using SMTP)
     try:
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login("bucketontrac@gmail.com", "")
-            server.sendmail(msg['From'], msg['To'], msg.as_string())
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
+            smtp.login(email_username, email_password)  # Login using Streamlit secrets
+            smtp.sendmail(msg['From'], msg['To'], msg.as_string())  # Send email
+        print("Email sent successfully")
     except Exception as e:
         print(f"Failed to send email: {e}")
         
