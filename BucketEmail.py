@@ -462,6 +462,7 @@ def send_email_with_csv(email, csv_data):
 
 def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
+    
     # Retrieve SendGrid credentials from Streamlit secrets
     sendgrid_api_key = st.secrets["sendgrid"]["api_key"]
     from_email = st.secrets["sendgrid"]["from_email"]
@@ -479,8 +480,8 @@ def send_email_with_pdf(email, pdf_file):
     mail = Mail(from_email, to_email, subject, content)
     
     # Read and encode the PDF file as base64
-    with open(pdf_file, 'rb') as pdf_file:
-        pdf_content = pdf_file.read()
+    with open(pdf_file, 'rb') as pdf:
+        pdf_content = pdf.read()
     encoded_file = base64.b64encode(pdf_content).decode('utf-8')
     
     # Create the attachment object
