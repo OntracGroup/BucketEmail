@@ -216,7 +216,7 @@ def send_email_with_csv(email, csv_data):
     except Exception as e:
         st.error(f"An error occurred: {str(e)}")
 
-def send_email_with_pdf(email, pdf_file):
+def send_email_with_pdf(email, pdf_bytes):
     """Send the PDF file via email."""
     # Retrieve email credentials from Streamlit secrets
     email_username = st.secrets["email"]["email_username"]
@@ -229,11 +229,8 @@ def send_email_with_pdf(email, pdf_file):
     msg['From'] = email_username  # Sender email
     msg['To'] = email
     
-    # Attach the PDF (convert the BytesIO object to bytes)
+    # Attach the PDF (now using the bytes directly)
     part = MIMEBase('application', 'octet-stream')
-
-    # Convert the BytesIO object to bytes and set as payload
-    pdf_bytes = pdf_file.getvalue()  # Get the byte content from BytesIO
     part.set_payload(pdf_bytes)  # Use pdf_bytes directly
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
@@ -520,11 +517,13 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 # Generate PDF with the results
                 pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
                 
-                # Send the email with the PDF attached
-                send_email_with_pdf(email, pdf_file)
-                
-                st.success("Please check your inbox!")
+                # Ensure pdf_file is in bytes, pass the byte content directly
+                pdf_bytes = pdf_file.getvalue()  # Convert the PDF from BytesIO to bytes
 
+                # Send the email with the PDF attached
+                send_email_with_pdf(email, pdf_bytes)  # Pass pdf_bytes instead of pdf_file
+
+                st.success("Please check your inbox!")
                 sheet.append_row([email])  # Add email to the Google Sheet
                 
                 # Allow users to submit another email
@@ -533,7 +532,6 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 st.error(f"An error occurred: {e}")
         else:
             st.error("Please enter a valid email address.")
-
 
 # Connect to Google Sheets
 try:
