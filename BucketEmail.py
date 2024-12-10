@@ -57,10 +57,10 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     headers = list(comparison_df.columns)
     data = [headers]  # Add header row to the data
     
-    # Extract table data
+    # Extract table data with logic for subheadings
     for index, row in comparison_df.iterrows():
-        if index in [0, 6, 14, 21]:  # Subheading row
-            data.append([f"<b>{row['Description']}</b>", "", "", "", ""])
+        if row['Description'].isupper():  # Assuming subheadings are in uppercase
+            data.append([f"<b>{row['Description']}</b>", "", "", "", ""])  # Subheading style
         else:
             data.append([
                 row['Description'],
@@ -73,17 +73,28 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     # 3️⃣ Create table and style it
     table = Table(data, colWidths=[110, 70, 70, 70, 70])  # Adjust column widths as needed
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header background
+        # Header Row Style
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
-        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align text
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold header
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Center align for header
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding for header
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#1e1e1e")),  # Default row background
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Row text color
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333")),  # Table border
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Body font
-        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Font size for all text
+        
+        # Subheading Row Style
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#555555")),  # Subheading background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#ffffff")),  # Subheading text color
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica-Bold'),  # Bold font for subheadings
+        ('SPAN', (0, 1), (-1, 1)),  # Merge all columns for subheading row
+        
+        # Default Row Styles
+        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#1e1e1e")),  # Default row background
+        ('TEXTCOLOR', (0, 2), (-1, -1), colors.HexColor("#e0e0e0")),  # Row text color
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Table border
+        ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),  # Default row font
+        ('FONTSIZE', (0, 2), (-1, -1), 10),  # Font size for all text
+
+        # Alternating Row Color
+        ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
     ]))
     
     # 4️⃣ Add table to PDF
@@ -114,7 +125,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     doc.build(elements)
     pdf_output.seek(0)
     return pdf_output
-
+    
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
     increment = dump_truck_payload * 0.001   # Fine adjustment increments
