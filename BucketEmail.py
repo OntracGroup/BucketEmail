@@ -231,7 +231,10 @@ def send_email_with_pdf(email, pdf_file):
     
     # Attach the PDF (convert the BytesIO object to bytes)
     part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_file.getvalue())  # Use getvalue() to get the byte content from BytesIO
+
+    # Convert the BytesIO object to bytes and set as payload
+    pdf_bytes = pdf_file.getvalue()  # Get the byte content from BytesIO
+    part.set_payload(pdf_bytes)  # Use pdf_bytes directly
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
