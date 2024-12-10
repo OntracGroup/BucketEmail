@@ -742,7 +742,7 @@ if 'calculate_button' not in st.session_state:
     st.session_state.calculate_button = False
 
 # Button to trigger calculations
-calculate_button = st.button('Calculate', on_click=lambda: st.session_state.update({'calculate_button': True}))
+calculate_button = st.button('Calculate!', on_click=lambda: st.session_state.update({'calculate_button': True}))
 
 if st.session_state.calculate_button:
     swl = find_matching_swl(user_data)  # Calculate matching SWL
