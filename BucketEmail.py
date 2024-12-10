@@ -526,10 +526,10 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
             # Total suspended load
             old_total_load = old_payload + user_data['current_bucket_weight'] + user_data['quick_hitch_weight']
             new_total_load = optimal_bucket['total_bucket_weight']  # Corrected variable
-    
-            # Adjust payload to achieve whole or near-whole swings for the new payload
-            swings_to_fill_truck_new = dump_truck_payload / new_payload
-            swings_to_fill_truck_old = dump_truck_payload / old_payload
+
+            # Adjust payload for the new bucket using the function
+            dump_truck_payload_new, swings_to_fill_truck_new = adjust_payload_for_new_bucket(dump_truck_payload, new_payload)
+            dump_truck_payload_old, swings_to_fill_truck_old = adjust_payload_for_old_bucket(dump_truck_payload, old_payload)
     
             # Time to fill truck in minutes
             time_to_fill_truck_old = swings_to_fill_truck_old / machine_swings_per_minute
@@ -545,7 +545,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
     
             # Total swings per hour
             total_swings_per_hour = 60 * machine_swings_per_minute
-    
+
             # Truck Tonnes per hour
             truck_tonnage_per_hour_old = swings_per_hour_old * old_capacity * user_data['material_density'] / 1000
             truck_tonnage_per_hour_new = swings_per_hour_new * new_capacity * user_data['material_density'] / 1000
@@ -555,8 +555,8 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
             total_tonnage_per_hour_new = total_swings_per_hour * new_capacity * user_data['material_density'] / 1000
     
             # Production (t/hr)
-            tonnage_per_hour_old = avg_trucks_per_hour_old * dump_truck_payload / 1000
-            tonnage_per_hour_new = avg_trucks_per_hour_new * dump_truck_payload / 1000
+            tonnage_per_hour_old = avg_trucks_per_hour_old * dump_truck_payload_old / 1000
+            tonnage_per_hour_new = avg_trucks_per_hour_new * dump_truck_payload_new / 1000
     
             # Assuming 1800 swings in a day
             total_m3_per_day_old = 1000 * old_capacity
@@ -569,13 +569,16 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
             # Total number of trucks per day
             total_trucks_per_day_old = total_tonnage_per_day_old / dump_truck_payload * 1000
             total_trucks_per_day_new = total_tonnage_per_day_new / dump_truck_payload * 1000
-    
+
             Productivity = f"{(1.1 * total_tonnage_per_hour_new - total_tonnage_per_hour_old) / total_tonnage_per_hour_old * 100:.0f}%"
-            st.session_state.productivity = Productivity
-            volume_increase = f"{new_capacity - old_capacity:.1f}"
-            st.session_state.volume_increase = volume_increase
-            volume_increase_percentage = f"{(new_capacity - old_capacity) / old_capacity * 100:.1f}%"
-            st.session_state.volume_increase_percentage = volume_increase_percentage
+
+            st.success(f"Great news! ONTRAC could improve your productivity by up to {Productivity}!")
+            st.success(f"Your ONTRAC XMOR® Bucket Solution is the: {optimal_bucket['bucket_name']} ({optimal_bucket['bucket_size']} m³)")
+            # Load and display images from a local directory
+            XMOR_IMAGE = Image.open('XMOR_BHC_IMAGE.png') if select_bhc else Image.open('XMOR_BHB_IMAGE.png')
+
+            # Show images
+            st.image([XMOR_IMAGE], caption=[f"{optimal_bucket['bucket_name']} ({optimal_bucket['bucket_size']} m³)"], width=400)
         
     
     
