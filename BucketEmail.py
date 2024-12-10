@@ -44,12 +44,11 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     return pdf_output
 
 def calculate_column_widths(table_data):
-    """Calculate column widths dynamically based on the longest content in each column."""
-    column_widths = []
-    for col in zip(*table_data):  # Transpose to iterate by column
-        max_len = max(len(str(cell)) for cell in col)  # Get max length of content in the column
-        column_widths.append(max_len * 6)  # Multiply by 6 for width approximation (you can adjust this factor)
-    return column_widths
+    col_widths = []
+    for col in zip(*table_data):
+        max_width = max(len(str(item)) for item in col)  # Find the max width of the column content
+        col_widths.append(max_width * 5)  # Adjust width multiplier as needed
+    return col_widths
 
 def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Add a dark background to the PDF page before adding content."""
