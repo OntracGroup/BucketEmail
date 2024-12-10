@@ -61,9 +61,9 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
 
     # Save PDF to a BytesIO object
     pdf_output = io.BytesIO()  # Ensure io.BytesIO is used here
-    pdf.output(pdf_output)
+    pdf.output(pdf_output)  # Write PDF to the BytesIO object
     pdf_output.seek(0)  # Reset pointer to the beginning of the file-like object
-    return pdf_output
+    return pdf_output  # Return the BytesIO object
 
 # Google Sheets credentials and setup
 def connect_to_google_sheet(sheet_name):
