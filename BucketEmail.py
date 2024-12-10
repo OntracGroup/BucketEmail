@@ -32,29 +32,28 @@ def add_section_title(title, df):
     return df_with_title
 
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    """Generate a polished PDF with user results and separate tables for each section."""
-    pdf_output = BytesIO()
-
-    # Create the PDF document
-    doc = SimpleDocTemplate(pdf_output, pagesize=letter, leftMargin=30, rightMargin=30, topMargin=30, bottomMargin=30)
-
-    # Prepare the flowables (content) to add to the PDF
+    # Create a PDF file path
+    pdf_filename = "/path/to/your/output.pdf"
+    
+    # Create a SimpleDocTemplate to generate the PDF
+    doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
+    
+    # Initialize the elements list
     elements = []
 
-    # Add background and content
-    add_background(None, None, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, elements)
-
-    # Build the PDF
-    doc.build(elements)
-
-    pdf_output.seek(0)
-    return pdf_output
-
-def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, elements):
-    """Add a dark background and structured content to the PDF page."""
+    # Call the function to add content and background to the PDF
+    add_background(doc, elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
     
+    # Finalize the PDF
+    doc.build(elements)
+    return pdf_filename
+
+
+def add_background(doc, elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+    """Add a dark background and structured content to the PDF page."""
     # Set the background color to dark
-    if canvas:
+    if doc:
+        canvas = doc.canv
         canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
         canvas.rect(0, 0, letter[0], letter[1], fill=True)
 
@@ -79,18 +78,18 @@ def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings
     normal_style.fontSize = 10
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color
 
-    # 1️⃣ Add Title
+    # Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
-    # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
+    # Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Add table for side-by-side comparison
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data)
-    side_by_side_table.setStyle(TableStyle([
+    side_by_side_table.setStyle(TableStyle([  # Table styling
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
