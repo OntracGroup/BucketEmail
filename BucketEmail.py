@@ -22,6 +22,7 @@ import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment
 import base64
 from PIL import Image
+import math
 
 def generate_pdf(user_data, optimal_bucket, comparison_df):
     """Generate a polished PDF with user results."""
