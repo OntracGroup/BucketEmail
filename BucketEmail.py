@@ -70,18 +70,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     
-    # Set a minimum table width (e.g., 500 units) and allow columns to adjust
-    min_table_width = 500
-    num_columns = len(side_by_side_df.columns)
-    total_col_width = sum([90] * num_columns)  # Sum of the default column widths
-    # Adjust column widths if necessary to achieve minimum table width
-    if total_col_width < min_table_width:
-        extra_width = min_table_width - total_col_width
-        adjusted_widths = [90 + extra_width / num_columns] * num_columns
-    else:
-        adjusted_widths = [90] * num_columns  # Default column widths
+    # Create the table with flexible column widths
+    side_by_side_table = Table(side_by_side_table_data, colWidths='*')  # "*" means flexible width
     
-    side_by_side_table = Table(side_by_side_table_data, colWidths=adjusted_widths)
+    # Apply dark mode styling
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -96,6 +88,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
+    
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
@@ -103,7 +96,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Paragraph("Loadout Productivity", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data)
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths='*')
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
