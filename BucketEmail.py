@@ -113,6 +113,98 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     pdf_output.seek(0)
     return pdf_output
 
+def generate_html_table(data, title):
+    """
+    Generate a simple HTML table from a dictionary where keys are column headers
+    and values are lists of data. The table will have a dynamic title, styled for dark mode.
+    """
+    # Extract headers dynamically from the keys of the data dictionary
+    headers = list(data.keys())
+    
+    # Find the maximum length of the lists (rows) in the data dictionary
+    num_rows = max(len(data[header]) for header in headers)
+    
+    # Start the HTML table structure with fixed table width
+    html = """
+    <style>
+        /* Global styles for Dark Mode */
+        body {
+            background-color: #121212; /* Dark background for the body */
+            color: #e0e0e0; /* Light text for dark mode */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        table {
+            width: 100%; /* Set a fixed width for the table */
+            margin: 0 auto; /* Center the table horizontally */
+            border-collapse: collapse;
+            font-size: 16px;
+            text-align: left;
+            background-color: #1e1e1e; /* Table background for dark mode */
+            color: #e0e0e0; /* Light text for table content */
+            border-radius: 8px; /* Rounded corners for modern look */
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #333; /* Border color for dark mode */
+            text-align: center; /* Centered text for better readability */
+        }
+        th {
+            background-color: #1e1e1e; /* Pale yellow-orange color for headers */
+            color: #ffffff; /* White text for headers */
+            font-weight: bold;
+        }
+        tr:nth-child(even) {
+            background-color: #2a2a2a; /* Slightly lighter row for contrast */
+        }
+        tr:nth-child(odd) {
+            background-color: #1e1e1e; /* Darker odd rows */
+        }
+        tr:hover {
+            background-color: #444; /* Highlight row on hover */
+        }
+        h3 {
+            font-size: 22px;
+            color: #f4c542; /* Orange color for the title */
+            font-weight: bold;
+            border-bottom: 2px solid #f4c542;
+            padding-bottom: 5px;
+            margin-bottom: 5px; /* Reduced margin to remove gap */
+        }
+        /* Optionally style the container for better layout */
+        .table-container {
+            background-color: #181818;
+            padding: 15px;
+            border-radius: 10px;
+        }
+    </style>
+    """
+    
+    # Use the title for both the h3 and table
+    html += f"<h3>{title}</h3>"
+    html += '<div class="table-container">'
+    html += "<table><thead><tr>"
+    
+    # Add table headers
+    for header in headers:
+        html += f"<th>{header}</th>"
+    
+    html += "</tr></thead><tbody>"
+    
+    # Add rows to the table, ensuring to handle any missing data gracefully
+    for i in range(num_rows):
+        html += "<tr>"
+        for header in headers:
+            value = data[header][i] if i < len(data[header]) else ""
+            html += f"<td>{value}</td>"
+        html += "</tr>"
+    
+    html += "</tbody></table>"
+    html += "</div>"
+    
+    return html
+
 # Google Sheets credentials and setup
 def connect_to_google_sheet(sheet_name):
     """Connect to Google Sheets and return a sheet object."""
@@ -309,10 +401,16 @@ def send_email_with_pdf(email, pdf_file):
         
 # Main Streamlit App UI
 def app():
-    st.title('ONTRAC XMOR® Bucket Solution')
+    st.write("Copyright © ONTRAC Group Pty Ltd 2024.")
+    
+ONTRAC_IMAGE = Image.open('dark_ontrac_logo.png')
+# Show images
+st.image([ONTRAC_IMAGE], width=200)
 
 # Streamlit UI
 st.title("ONTRAC XMOR® Bucket Solution\n\n")
+st.caption("Select your load out equipment to discover the bucket for you.")
+
 st.title("Excavator Selection")
 
 # Excavator inputs
@@ -409,9 +507,19 @@ user_data = {
 }
     
 # Add a "Calculate" button
-#calculate_button = st.button("Calculate")
+calculate_button = st.button("Calculate")
 
-def generate_comparison_df(user_data, optimal_bucket, swl):
+# Run calculations only when the button is pressed
+if calculate_button:
+    swl = find_matching_swl(user_data)
+    if swl:
+        # Load selected bucket data
+        selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
+        bucket_data = load_bucket_data(selected_bucket_csv)
+    
+        optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
+    
+        if optimal_bucket:
         old_capacity = user_data['current_bucket_size']
         new_capacity = optimal_bucket['bucket_size']
         old_payload = calculate_bucket_load(old_capacity, user_data['material_density'])
@@ -544,25 +652,53 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
             f"{(1.1 * total_trucks_per_day_new - total_trucks_per_day_old) / total_trucks_per_day_old * 100:.0f}%"
         ]
     }
-        comparison_df = pd.DataFrame(data)
-        return comparison_df
+    # Function to add a title row
+        def add_section_title(title, data):
+            # Create a DataFrame with the title row
+            title_row = pd.DataFrame([[title] + [''] * (len(data.columns) - 1)], columns=data.columns)
+            # Concatenate title row and the data
+            return pd.concat([title_row, data], ignore_index=True)
+        
+        # Example DataFrames for each section
+        side_by_side_df = pd.DataFrame(side_by_side_data)
+        loadout_productivity_df = pd.DataFrame(loadout_productivity_data)
+        swings_simulation_df = pd.DataFrame(swings_simulation_data)
+        improved_cycle_df = pd.DataFrame(improved_cycle_data)
+        
+        # Adding section headers
+        side_by_side_with_title = add_section_title("Side-by-Side Bucket Comparison", side_by_side_df)
+        loadout_productivity_with_title = add_section_title("Loadout Productivity & Truck Pass Simulation", loadout_productivity_df)
+        swings_simulation_with_title = add_section_title("1000 Swings Side-by-Side Simulation", swings_simulation_df)
+        improved_cycle_with_title = add_section_title("10% Improved Cycle Time Simulation", improved_cycle_df)
+        
+        # Combine all sections into one DataFrame
+        final_df = pd.concat([
+            side_by_side_with_title,
+            loadout_productivity_with_title,
+            swings_simulation_with_title,
+            improved_cycle_with_title
+        ], ignore_index=True)
 
-
-    
-    # Email input
-  #  st.write(" ")
- #   st.write(" ")
- #   st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>',unsafe_allow_html=True) 
-  #  swl = find_matching_swl(user_data)
-    # Generate the comparison DataFrame and CSV data in advance
-  #  selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
-  #  bucket_data = load_bucket_data(selected_bucket_csv)
-   # optimal_bucket = select_optimal_bucket(user_data, bucket_data, swl)
-    
-   # comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
-    #csv_data = io.StringIO()
-    #comparison_df.to_csv(csv_data, index=False)
-    #csv_data.seek(0)  # Reset the pointer to the start of the file-like object
+        if final_df is not None:
+                st.title('XMOR® Productivity Comparison')
+            
+                # Call the function for each table with the appropriate title
+                st.markdown(generate_html_table(side_by_side_data, "Side-by-Side Bucket Comparison"), unsafe_allow_html=True)
+                st.markdown(generate_html_table(loadout_productivity_data, "Loadout Productivity & Truck Pass Simulation"), unsafe_allow_html=True)
+                st.markdown(generate_html_table(swings_simulation_data, "1000 Swings Side-by-Side Simulation"), unsafe_allow_html=True)
+                st.markdown(generate_html_table(improved_cycle_data, "10% Improved Cycle Time Simulation"), unsafe_allow_html=True)
+            
+                # Optional notes about dump truck fill factor
+                if dump_truck_payload_new != dump_truck_payload:
+                    st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_new / dump_truck_payload):.1f}% applied for XMOR® Bucket pass matching.")
+                if dump_truck_payload_old != dump_truck_payload:
+                    st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.")
+            
+                # Provide additional details for calculations
+                st.write(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg")
+                st.write(f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg")
+                st.write(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.")
+                st.write(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg")
 
 def collect_email(sheet, user_data, optimal_bucket, comparison_df):
     """Collect the user's email and store it in the Google Sheet."""
