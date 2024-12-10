@@ -33,7 +33,7 @@ def add_section_title(title, df):
 
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     # Create a PDF file path
-    pdf_filename = "/path/to/your/output.pdf"
+    pdf_filename = "output.pdf"
     
     # Create a SimpleDocTemplate to generate the PDF
     doc = SimpleDocTemplate(pdf_filename, pagesize=letter, onFirstPage=add_background)
@@ -42,7 +42,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements = []
 
     # Add content to the PDF
-    pdf_filename = "output.pdf"
     add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
     
     # Finalize the PDF
