@@ -36,30 +36,20 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     heading_style = styles['Heading1']
     normal_style = styles['Normal']
     
-    # Add Title
+    # Custom Title Style
+    title_style.fontSize = 22
+    title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
+    heading_style.fontSize = 18
+    heading_style.textColor = colors.HexColor("#f4c542")
+    normal_style.fontSize = 10  # Small text for normal content
+    
+    # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
-    elements.append(Spacer(1, 20))  # Add space
-    
-    # Add introduction
-    intro_text = "G'day from the ONTRAC team! Here's your side-by-side comparison of the old and new bucket configurations."
-    elements.append(Paragraph(intro_text, normal_style))
-    elements.append(Spacer(1, 20))  # Add space
-    
-    # Add User Data section
-    elements.append(Paragraph("User Input Data", heading_style))
-    for key, value in user_data.items():
-        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
-    elements.append(Spacer(1, 20))  # Add space
-    
-    # Add Optimal Bucket Information
-    elements.append(Paragraph("Optimal Bucket Information", heading_style))
-    for key, value in optimal_bucket.items():
-        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
-    elements.append(Spacer(1, 20))  # Add space
-    
-    # Add Table Header
+    elements.append(Spacer(1, 12))  # Space below the title
+
+    # 2️⃣ Add Table Header
     elements.append(Paragraph("Comparison Table", heading_style))
-    elements.append(Spacer(1, 10))
+    elements.append(Spacer(1, 8))  # Space below the table title
     
     # Extract column headers
     headers = list(comparison_df.columns)
@@ -78,26 +68,43 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
                 row['% Difference']
             ])
     
-    # Create table and style it
-    table = Table(data, colWidths=[120, 80, 80, 80, 80])  # Adjust column widths as needed
+    # 3️⃣ Create table and style it
+    table = Table(data, colWidths=[110, 70, 70, 70, 70])  # Adjust column widths as needed
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f2f2f2")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align text
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold header
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding for header
-        ('BACKGROUND', (0, 1), (-1, -1), colors.white),  # Row background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),  # Row text color
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),  # Table border
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#1e1e1e")),  # Default row background
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Row text color
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333")),  # Table border
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Body font
         ('FONTSIZE', (0, 0), (-1, -1), 10),  # Font size for all text
     ]))
     
-    # Add table to PDF
+    # 4️⃣ Add table to PDF
     elements.append(table)
-    elements.append(Spacer(1, 20))  # Add space
+    elements.append(Spacer(1, 20))  # Space below the table
+
+    # 5️⃣ Add User Input Section
+    elements.append(Paragraph("User Input Data", heading_style))
+    elements.append(Spacer(1, 8))  # Space below section title
     
-    # Add closing message
+    for key, value in user_data.items():
+        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
+    elements.append(Spacer(1, 20))  # Space below user data section
+
+    # 6️⃣ Add Optimal Bucket Information Section
+    elements.append(Paragraph("Optimal Bucket Information", heading_style))
+    elements.append(Spacer(1, 8))  # Space below section title
+    
+    for key, value in optimal_bucket.items():
+        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
+    elements.append(Spacer(1, 20))  # Space below optimal bucket section
+
+    # 7️⃣ Add closing message
     closing_text = "Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!"
     elements.append(Paragraph(closing_text, normal_style))
     
