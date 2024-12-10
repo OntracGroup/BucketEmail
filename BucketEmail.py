@@ -507,13 +507,7 @@ user_data = {
     'machine_swings_per_minute': machine_swings_per_minute
 }
     
-# Add a "Calculate" button
-calculate_button = st.button("Calculate")
-
-# Run calculations only when the button is pressed
-if calculate_button:
-    swl = find_matching_swl(user_data)
-    if swl:
+def generate_comparison_df(user_data, optimal_bucket, swl):
         # Load selected bucket data
         selected_bucket_csv = bhc_bucket_csv if select_bhc else bucket_csv
         bucket_data = load_bucket_data(selected_bucket_csv)
