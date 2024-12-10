@@ -837,7 +837,7 @@ if st.session_state.calculate_button:
             st.write(f"Your XMOR® Bucket Total Suspended Load: {optimal_bucket['total_bucket_weight']} kg")
             
             # Display the DataFrame
-            st.dataframe(comparison_df)
+            #st.dataframe(comparison_df)
             
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
