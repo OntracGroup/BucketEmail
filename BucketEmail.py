@@ -6,7 +6,10 @@
 import streamlit as st
 import pandas as pd
 import smtplib
-from reportlab.lib.pagesizes import letter
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
 import io
 from email.mime.multipart import MIMEMultipart
@@ -20,40 +23,86 @@ from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment
 import base64
 
 def generate_pdf(user_data, optimal_bucket, comparison_df):
+    """Generate a polished PDF with user results."""
     pdf_output = io.BytesIO()
-    c = canvas.Canvas(pdf_output, pagesize=letter)
-    c.setFont("Helvetica-Bold", 16)
-    c.drawString(200, 750, "ONTRAC Excavator Bucket Optimization Results")
-    y_position = 700
-    c.setFont("Helvetica", 12)
-    c.drawString(100, y_position, "User Input Data:")
-    y_position -= 20
+    
+    # Create the PDF document
+    doc = SimpleDocTemplate(pdf_output, pagesize=letter)
+    elements = []  # List of all elements to be added to the PDF
+    
+    # Set up document styles
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    heading_style = styles['Heading1']
+    normal_style = styles['Normal']
+    
+    # Add Title
+    elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
+    elements.append(Spacer(1, 20))  # Add space
+    
+    # Add introduction
+    intro_text = "G'day from the ONTRAC team! Here's your side-by-side comparison of the old and new bucket configurations."
+    elements.append(Paragraph(intro_text, normal_style))
+    elements.append(Spacer(1, 20))  # Add space
+    
+    # Add User Data section
+    elements.append(Paragraph("User Input Data", heading_style))
     for key, value in user_data.items():
-        c.drawString(100, y_position, f"{key}: {value}")
-        y_position -= 20
-    c.setFont("Helvetica-Bold", 12)
-    y_position -= 30
-    c.drawString(100, y_position, "Optimal Bucket Information:")
-    y_position -= 20
-    c.setFont("Helvetica", 12)
+        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
+    elements.append(Spacer(1, 20))  # Add space
+    
+    # Add Optimal Bucket Information
+    elements.append(Paragraph("Optimal Bucket Information", heading_style))
     for key, value in optimal_bucket.items():
-        c.drawString(100, y_position, f"{key}: {value}")
-        y_position -= 20
-    c.setFont("Helvetica-Bold", 12)
-    y_position -= 30
-    c.drawString(100, y_position, "Comparison Table:")
-    y_position -= 20
-    c.setFont("Helvetica", 10)
-    for col in comparison_df.columns:
-        c.drawString(100, y_position, col)
-        y_position -= 15
-    y_position -= 10
+        elements.append(Paragraph(f"<b>{key}:</b> {value}", normal_style))
+    elements.append(Spacer(1, 20))  # Add space
+    
+    # Add Table Header
+    elements.append(Paragraph("Comparison Table", heading_style))
+    elements.append(Spacer(1, 10))
+    
+    # Extract column headers
+    headers = list(comparison_df.columns)
+    data = [headers]  # Add header row to the data
+    
+    # Extract table data
     for index, row in comparison_df.iterrows():
-        for value in row:
-            c.drawString(100, y_position, str(value))
-            y_position -= 15
-        y_position -= 10
-    c.save()
+        if index in [0, 6, 14, 21]:  # Subheading row
+            data.append([f"<b>{row['Description']}</b>", "", "", "", ""])
+        else:
+            data.append([
+                row['Description'],
+                row['OLD Bucket'],
+                row['New Bucket'],
+                row['Difference'],
+                row['% Difference']
+            ])
+    
+    # Create table and style it
+    table = Table(data, colWidths=[120, 80, 80, 80, 80])  # Adjust column widths as needed
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#f2f2f2")),  # Header background
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),  # Header text color
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center align text
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold header
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding for header
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),  # Row background
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.black),  # Row text color
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),  # Table border
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Body font
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Font size for all text
+    ]))
+    
+    # Add table to PDF
+    elements.append(table)
+    elements.append(Spacer(1, 20))  # Add space
+    
+    # Add closing message
+    closing_text = "Thank you for using ONTRAC's bucket optimiser, we hope to hear from you soon!"
+    elements.append(Paragraph(closing_text, normal_style))
+    
+    # Build the PDF
+    doc.build(elements)
     pdf_output.seek(0)
     return pdf_output
 
