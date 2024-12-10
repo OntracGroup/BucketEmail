@@ -205,7 +205,7 @@ def send_email_with_csv(email, csv_data):
     except Exception as e:
         print(f"Failed to send email: {e}")
 
-def send_email_with_pdf(email, pdf_bytes):
+def send_email_with_pdf(email, pdf_file):
     """Send the PDF file via email."""
     # Retrieve email credentials from Streamlit secrets
     email_username = st.secrets["email"]["email_username"]
