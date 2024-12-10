@@ -16,54 +16,42 @@ from fpdf import FPDF
 from google.oauth2.service_account import Credentials
 
 def generate_pdf(user_data, optimal_bucket, comparison_df):
-    """Generate a PDF file with user results."""
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Arial", size=12)
-
-    # Title
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, 'ONTRAC Excavator Bucket Optimization Results', ln=True, align='C')
-    pdf.ln(10)  # Line break
-
-    # User Inputs
-    pdf.set_font("Arial", size=12)
-    pdf.cell(0, 10, f"User Input Data", ln=True)
+    pdf_output = io.BytesIO()
+    c = canvas.Canvas(pdf_output, pagesize=letter)
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(200, 750, "ONTRAC Excavator Bucket Optimization Results")
+    y_position = 700
+    c.setFont("Helvetica", 12)
+    c.drawString(100, y_position, "User Input Data:")
+    y_position -= 20
     for key, value in user_data.items():
-        pdf.cell(0, 10, f"{key}: {value}", ln=True)
-    
-    pdf.ln(10)  # Line break
-    
-    # Optimal Bucket Results
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(0, 10, 'Optimal Bucket Information', ln=True)
+        c.drawString(100, y_position, f"{key}: {value}")
+        y_position -= 20
+    c.setFont("Helvetica-Bold", 12)
+    y_position -= 30
+    c.drawString(100, y_position, "Optimal Bucket Information:")
+    y_position -= 20
+    c.setFont("Helvetica", 12)
     for key, value in optimal_bucket.items():
-        pdf.set_font("Arial", size=12)
-        pdf.cell(0, 10, f"{key}: {value}", ln=True)
-    
-    pdf.ln(10)  # Line break
-    
-    # Table for DataFrame
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(0, 10, 'Comparison Table', ln=True)
-    pdf.set_font("Arial", size=10)
-    
-    # Column headers
+        c.drawString(100, y_position, f"{key}: {value}")
+        y_position -= 20
+    c.setFont("Helvetica-Bold", 12)
+    y_position -= 30
+    c.drawString(100, y_position, "Comparison Table:")
+    y_position -= 20
+    c.setFont("Helvetica", 10)
     for col in comparison_df.columns:
-        pdf.cell(40, 10, col, border=1, align='C')
-    pdf.ln()
-
-    # Rows
+        c.drawString(100, y_position, col)
+        y_position -= 15
+    y_position -= 10
     for index, row in comparison_df.iterrows():
         for value in row:
-            pdf.cell(40, 10, str(value), border=1, align='C')
-        pdf.ln()
-
-    # Save PDF to a BytesIO object
-    pdf_output = io.BytesIO()  # Ensure io.BytesIO is used here
-    pdf.output(pdf_output)  # Write PDF to the BytesIO object
-    pdf_output.seek(0)  # Reset pointer to the beginning of the file-like object
-    return pdf_output  # Return the BytesIO object
+            c.drawString(100, y_position, str(value))
+            y_position -= 15
+        y_position -= 10
+    c.save()
+    pdf_output.seek(0)
+    return pdf_output
 
 # Google Sheets credentials and setup
 def connect_to_google_sheet(sheet_name):
@@ -226,21 +214,19 @@ def send_email_with_pdf(email, pdf_bytes):
 
     msg = MIMEMultipart()
     msg['Subject'] = 'Your ONTRAC Excavator Results'
-    msg['From'] = email_username  # Sender email
+    msg['From'] = email_username
     msg['To'] = email
     
-    # Attach the PDF (using bytes directly)
     part = MIMEBase('application', 'octet-stream')
-    part.set_payload(pdf_bytes)  # Directly use the byte content (no need to call .getvalue() again)
+    part.set_payload(pdf_file.read())
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', 'attachment; filename="comparison.pdf"')
     msg.attach(part)
 
-    # Send the email (using SMTP)
     try:
         with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
-            smtp.login(email_username, email_password)  # Login using Streamlit secrets
-            smtp.sendmail(msg['From'], msg['To'], msg.as_string())  # Send email
+            smtp.login(email_username, email_password)
+            smtp.sendmail(msg['From'], msg['To'], msg.as_string())
         print("Email sent successfully")
     except Exception as e:
         print(f"Failed to send email: {e}")
@@ -513,14 +499,12 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
         
     if submit_button:
         if "@" in email and "." in email:  # Basic email validation
+            
             # Generate PDF with the results
             pdf_file = generate_pdf(user_data, optimal_bucket, comparison_df)
             
-            # Get byte content from the PDF (make sure we are working with bytes)
-            pdf_bytes = pdf_file.getvalue()  # This should be the bytes, not the BytesIO object
-
             # Send the email with the PDF attached
-            send_email_with_pdf(email, pdf_bytes)  # Pass the bytes here
+            send_email_with_pdf(email, pdf_file, email_username, email_password, smtp_server, smtp_port)
 
             st.success("Please check your inbox!")
             try:
