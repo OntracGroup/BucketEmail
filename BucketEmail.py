@@ -357,7 +357,7 @@ def send_email_with_csv(email, csv_data):
         <table>
             <tr>
                 <th>Description</th>
-                <th>OLD Bucket</th>
+                <th>Old Bucket</th>
                 <th>New Bucket</th>
                 <th>Difference</th>
                 <th>% Difference</th>
@@ -376,7 +376,7 @@ def send_email_with_csv(email, csv_data):
                 html_content += f"""
                 <tr>
                     <td>{row['Description']}</td>
-                    <td>{row['OLD Bucket']}</td>
+                    <td>{row['Old Bucket']}</td>
                     <td>{row['New Bucket']}</td>
                     <td>{row['Difference']}</td>
                     <td>{row['% Difference']}</td>
