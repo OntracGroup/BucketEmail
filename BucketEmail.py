@@ -51,20 +51,20 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     return pdf_output
 
 def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, elements):
-    """Add a dark background to the PDF page before adding content."""
+    """Add a dark background and structured content to the PDF page."""
     # Set the background color to dark
-    canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
-    canvas.rect(0, 0, letter[0], letter[1], fill=True)
+    if canvas:
+        canvas.setFillColor(colors.HexColor("#121212"))  # Dark background
+        canvas.rect(0, 0, letter[0], letter[1], fill=True)
 
-    # Now add the content
-    elements = []  # List of all elements to be added to the PDF
+    # Prepare styles
     styles = getSampleStyleSheet()
     title_style = styles['Title']
     heading_style = styles['Heading1']
     subheading_style = styles['Heading2']
     normal_style = styles['Normal']
     
-    # Custom styles for dark mode
+    # Customize styles for dark mode
     title_style.fontSize = 22
     title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
     
@@ -75,9 +75,9 @@ def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
     subheading_style.underline = True  # Underline subheadings
     
-    normal_style.fontSize = 10  # Small text for normal content
-    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
-    
+    normal_style.fontSize = 10
+    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color
+
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
@@ -86,7 +86,7 @@ def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings
     elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
     
-    # Create the side-by-side table
+    # Add table for side-by-side comparison
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data)
     side_by_side_table.setStyle(TableStyle([
@@ -106,22 +106,22 @@ def add_background(canvas, doc, side_by_side_df, loadout_productivity_df, swings
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
-    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
+    # 3️⃣ Add Section 2: Loadout Productivity (example)
+    elements.append(Paragraph("Loadout Productivity", heading_style))
     elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Create the loadout productivity table
+
+    # Example of adding another table (same format as above)
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
     loadout_productivity_table = Table(loadout_productivity_table_data)
     loadout_productivity_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Header background
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # Header text color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),  # Table body background
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Body text color
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Grid lines
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#121212")),
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
