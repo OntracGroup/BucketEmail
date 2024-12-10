@@ -42,7 +42,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements = []
 
     # Add content to the PDF
-    add_content(elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
+    pdf_filename = "output.pdf"
+    add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
     
     # Finalize the PDF
     doc.build(elements)
@@ -53,7 +54,7 @@ def add_background(canvas, doc):
     canvas.setFillColor(colors.HexColor("#121212"))  # Dark background color
     canvas.rect(0, 0, letter[0], letter[1], fill=True)  # Draw rectangle to fill the entire page
 
-def add_content(elements, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+def add_content(pdf_filename, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     #"""Add structured content and tables to the PDF."""
     # Initialize the PDF document
     doc = SimpleDocTemplate(pdf_filename, pagesize=letter)
