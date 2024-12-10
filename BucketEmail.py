@@ -17,6 +17,7 @@ from fpdf import FPDF
 from google.oauth2.service_account import Credentials
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
+import base64
 
 def generate_pdf(user_data, optimal_bucket, comparison_df):
     pdf_output = io.BytesIO()
@@ -221,26 +222,32 @@ def send_email_with_pdf(email, pdf_file):
     to_email = To(email)
     subject = "Your ONTRAC Excavator Results"
     content = Content("text/plain", "Please find the attached PDF with your results.")
-
-    # Create the email
+    
+    # Create the email object
     mail = Mail(from_email, to_email, subject, content)
     
-    # Attach the PDF file
-    attachment = {
-        "content": pdf_file.read().decode("latin1"),
-        "type": "application/pdf",
-        "filename": "comparison.pdf",
-        "disposition": "attachment"
-    }
-    mail.attachment = attachment
-
+    # Read and encode the PDF file as base64
+    pdf_content = pdf_file.read()
+    encoded_file = base64.b64encode(pdf_content).decode('utf-8')
+    
+    # Create the attachment object
+    attachment = Attachment(
+        file_content=encoded_file,
+        file_type='application/pdf',
+        file_name='comparison.pdf',
+        disposition='attachment'
+    )
+    
+    # Attach the file to the email
+    mail.add_attachment(attachment)
+    
     # Send the email
     try:
         response = sg.send(mail)
         if response.status_code == 202:
             print("Email sent successfully")
         else:
-            print(f"Failed to send email: {response.status_code}")
+            print(f"Failed to send email: Status code {response.status_code}")
     except Exception as e:
         print(f"Failed to send email: {e}")
         
