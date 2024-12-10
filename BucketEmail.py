@@ -24,8 +24,14 @@ import base64
 from PIL import Image
 import math
 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+
 def generate_pdf(user_data, optimal_bucket, comparison_df):
-    """Generate a polished PDF with user results."""
+    """Generate a polished PDF with user results similar to HTML design."""
     pdf_output = io.BytesIO()
     
     # Create the PDF document
@@ -99,6 +105,8 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
         ('FONTNAME', (0, 2), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 2), (-1, -1), 10),
         ('BACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a")),  # Alternating row background
+        ('ALIGN', (0, 2), (-1, -1), 'CENTER'),
+        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     
     elements.append(table)
@@ -144,19 +152,11 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     doc.leftMargin = 30
     doc.rightMargin = 30
     
-    # Create a custom background color
-    from reportlab.lib.colors import black
-    from reportlab.platypus import PageBreak
-
-    # Apply a black background to each page
-    def set_dark_background(canvas, doc):
-        canvas.setFillColor(black)
-        canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
-
     # Build the PDF
-    doc.build(elements, onFirstPage=set_dark_background, onLaterPages=set_dark_background)
+    doc.build(elements)
     pdf_output.seek(0)
     return pdf_output
+
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
