@@ -59,6 +59,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     normal_style.fontSize = 10  # Small text for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
     
+    # Background color for dark mode
+    background_color = colors.HexColor("#121212")
+    
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
@@ -69,9 +72,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_df.columns))  # Adjust column widths as needed
+    side_by_side_table = Table(side_by_side_table_data, colWidths=[120, 90, 120])  # Wider column for the description
     side_by_side_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('BACKGROUND', (0, 0), (-1, 0), background_color),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -93,9 +96,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_df.columns))
+    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[120, 90, 120])
     loadout_productivity_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('BACKGROUND', (0, 0), (-1, 0), background_color),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -117,9 +120,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_df.columns))
+    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[120, 90, 120])
     swings_simulation_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('BACKGROUND', (0, 0), (-1, 0), background_color),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -141,9 +144,9 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_df.columns))
+    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[120, 90, 120])
     improved_cycle_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
+        ('BACKGROUND', (0, 0), (-1, 0), background_color),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -164,6 +167,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     pdf_output.seek(0)
     
     return pdf_output
+
 
 
     
