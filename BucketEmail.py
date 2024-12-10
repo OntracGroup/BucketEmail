@@ -69,7 +69,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths=[90] * len(side_by_side_df.columns))  # Adjust column widths as needed
+    side_by_side_table = Table(side_by_side_table_data)  # Let ReportLab handle column widths
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -93,7 +93,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths=[90] * len(loadout_productivity_df.columns))
+    loadout_productivity_table = Table(loadout_productivity_table_data)  # Let ReportLab handle column widths
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -117,7 +117,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths=[90] * len(swings_simulation_df.columns))
+    swings_simulation_table = Table(swings_simulation_table_data)  # Let ReportLab handle column widths
     swings_simulation_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -141,7 +141,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths=[90] * len(improved_cycle_df.columns))
+    improved_cycle_table = Table(improved_cycle_table_data)  # Let ReportLab handle column widths
     improved_cycle_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
@@ -157,9 +157,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(improved_cycle_table)
-    elements.append(Spacer(1, 20))  # Space below the table
-
-    # Build the PDF
+    
+    # Build the PDF document
     doc.build(elements)
     pdf_output.seek(0)
     
@@ -878,7 +877,7 @@ if st.session_state.calculate_button:
             
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
-                st.markdown(f'<p class="custom-font">Would you like a side-by-side comparison sent to your email?</p>', unsafe_allow_html=True)
+                st.subheader('Would you like a side-by-side comparison sent to your email?')
                 collect_email(sheet, user_data, optimal_bucket, comparison_df)
         else:
             st.warning("No suitable bucket found within SWL limits.")
