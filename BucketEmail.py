@@ -64,7 +64,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
         else:
             data.append([
                 row['Description'],
-                row['OLD Bucket'],
+                row['Old Bucket'],
                 row['New Bucket'],
                 row['Difference'],
                 row['% Difference']
