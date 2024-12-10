@@ -65,7 +65,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
             data.append([
                 row['Description'],
                 row['Old Bucket'],
-                row['New Bucket'],
+                row['XMOR® Bucket'],
                 row['Difference'],
                 row['% Difference']
             ])
@@ -358,7 +358,7 @@ def send_email_with_csv(email, csv_data):
             <tr>
                 <th>Description</th>
                 <th>Old Bucket</th>
-                <th>New Bucket</th>
+                <th>XMOR® Bucket</th>
                 <th>Difference</th>
                 <th>% Difference</th>
             </tr>
@@ -377,7 +377,7 @@ def send_email_with_csv(email, csv_data):
                 <tr>
                     <td>{row['Description']}</td>
                     <td>{row['Old Bucket']}</td>
-                    <td>{row['New Bucket']}</td>
+                    <td>{row['XMOR® Bucket']}</td>
                     <td>{row['Difference']}</td>
                     <td>{row['% Difference']}</td>
                 </tr>
