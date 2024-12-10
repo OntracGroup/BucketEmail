@@ -210,8 +210,8 @@ def send_email_with_csv(email, csv_data):
     # Send the email (using SMTP)
     
     with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
-            smtp.login(email_username, email_password)  # Login using Streamlit secrets
-            smtp.sendmail(msg['From'], msg['To'], msg.as_string())  # Send email
+        smtp.login(email_username, email_password)  # Login using Streamlit secrets
+        smtp.sendmail(msg['From'], msg['To'], msg.as_string())  # Send email
         print("Email sent successfully")
     except Exception as e:
         print(f"Failed to send email: {e}")
