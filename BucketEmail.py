@@ -207,14 +207,14 @@ def send_email_with_csv(email, csv_data):
 
         msg.add_alternative(html_content, subtype='html')
         
-        # Send the email
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-            smtp.login("", "")
-            smtp.send_message(msg)
-        st.success("Email sent successfully!")
-         
+    # Send the email (using SMTP)
+    try:
+        with smtplib.SMTP_SSL(smtp_server, smtp_port) as smtp:
+            smtp.login(email_username, email_password)  # Login using Streamlit secrets
+            smtp.sendmail(msg['From'], msg['To'], msg.as_string())  # Send email
+        print("Email sent successfully")
     except Exception as e:
-        st.error(f"An error occurred: {str(e)}")
+        print(f"Failed to send email: {e}")
 
 def send_email_with_pdf(email, pdf_bytes):
     """Send the PDF file via email."""
@@ -521,7 +521,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
                 pdf_bytes = pdf_file.getvalue()  # This should be the bytes, not the BytesIO object
 
                 # Send the email with the PDF attached
-                send_email_with_pdf(email, pdf_bytes)  # Pass the bytes here
+                send_email_with_csv(email, pdf_bytes)  # Pass the bytes here
 
                 st.success("Please check your inbox!")
                 sheet.append_row([email])  # Add email to the Google Sheet
