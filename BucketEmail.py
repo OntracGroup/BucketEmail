@@ -30,6 +30,12 @@ from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 import io
 
+from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+
 def generate_pdf(user_data, optimal_bucket, comparison_df):
     """Generate a polished PDF with user results similar to HTML design."""
     pdf_output = io.BytesIO()
@@ -156,6 +162,7 @@ def generate_pdf(user_data, optimal_bucket, comparison_df):
     doc.build(elements)
     pdf_output.seek(0)
     return pdf_output
+
 
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
