@@ -7,6 +7,9 @@ import streamlit as st
 import pandas as pd
 import smtplib
 from email.message import EmailMessage
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 import io
 import gspread
 from fpdf import FPDF
