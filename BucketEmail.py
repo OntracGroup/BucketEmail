@@ -42,7 +42,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
-
+    
     # Set background color for the entire page (dark mode)
     def add_dark_mode_background(canvas, doc):
         canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
@@ -55,37 +55,33 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Dark mode colors for the text
     title_style = styles['Title']
-    title_style.fontSize = 24
+    title_style.fontSize = 24  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
-    title_style.leading = 30  # Increase line height for the title
     
     heading_style = styles['Heading1']
-    heading_style.fontSize = 20
+    heading_style.fontSize = 20  # Bigger heading font size
     heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
     heading_style.underline = True  # Underline headings
-    heading_style.leading = 24  # Increase space between heading and content
     
     subheading_style = styles['Heading2']
     subheading_style.fontSize = 16
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
     subheading_style.underline = True  # Underline subheadings
-    subheading_style.leading = 20  # Space between subheading and content
     
     normal_style = styles['Normal']
-    normal_style.fontSize = 12  # Larger text for normal content
+    normal_style.fontSize = 12  # Slightly larger font size for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
-    normal_style.leading = 14  # Increase line height for better readability
 
     # Apply underline manually using a Paragraph style
     heading_style.fontName = 'Helvetica-Bold'
     
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC XMOR® Bucket Comparison", title_style))
-    elements.append(Spacer(1, 24))  # Increased space below the title
+    elements.append(Spacer(1, 12))  # Space below the title
 
     # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("<u>Side-by-Side Bucket Comparison</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 16))  # Increased space below the heading
+    elements.append(Spacer(1, 6))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
@@ -95,22 +91,25 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),  # Slightly thicker grid lines
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Slightly larger font size for table data
+        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Increased font size in table
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 12),  # Increased padding inside table cells
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Light gray for content
+        ('PADDING', (0, 0), (-1, -1), 15),  # Increased padding for readability
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
+        ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor("#1e1e1e")),  # Header row color
+        ('TEXTCOLOR', (0, 1), (-1, 1), colors.HexColor("#ffffff")),
+        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))  # Alternating row colors
     ]))
     elements.append(side_by_side_table)
-    elements.append(Spacer(1, 30))  # Increased space below the table
+    elements.append(Spacer(1, 8))  # Reduced space below the table
 
     # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
     elements.append(Paragraph("<u>Loadout Productivity & Truck Pass Simulation</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 16))  # Space below the heading
+    elements.append(Spacer(1, 6))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
@@ -120,21 +119,23 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 12),
+        ('PADDING', (0, 0), (-1, -1), 15),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(loadout_productivity_table)
-    elements.append(Spacer(1, 30))  # Increased space below the table
+    elements.append(Spacer(1, 8))  # Reduced space below the table
 
-    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
-    elements.append(Paragraph("<u>1000 Swings Side-by-Side Simulation</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 16))  # Space below the heading
+  # 4️⃣ Add Section 3: Swings Simulation Results
+    elements.append(Paragraph("<u>Swings Simulation Results</u>", heading_style))  # Underlined heading
+    elements.append(Spacer(1, 6))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
@@ -144,21 +145,23 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 12),
+        ('PADDING', (0, 0), (-1, -1), 15),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(swings_simulation_table)
-    elements.append(Spacer(1, 30))  # Increased space below the table
+    elements.append(Spacer(1, 8))  # Reduced space below the table
 
-    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("<u>10% Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 16))  # Space below the heading
+    # 5️⃣ Add Section 4: Improved Cycle Time and Loadout Efficiency
+    elements.append(Paragraph("<u>Improved Cycle Time and Loadout Efficiency</u>", heading_style))  # Underlined heading
+    elements.append(Spacer(1, 6))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
@@ -168,23 +171,26 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 14),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 12),
+        ('PADDING', (0, 0), (-1, -1), 15),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(improved_cycle_table)
+    elements.append(Spacer(1, 8))  # Reduced space below the table
 
-    # Build the document
+    # Build the document with dark mode background applied
     doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
-    pdf_output.seek(0)
-    
-    return pdf_output
 
+    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
+    pdf_output.seek(0)
+    return pdf_output
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
