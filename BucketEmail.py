@@ -463,8 +463,8 @@ def send_email_with_pdf(email, pdf_file):
     # Create the email components
     from_email = Email(from_email)
     to_email = To(email)
-    subject = "Your ONTRAC Excavator Results"
-    content = Content("text/plain", "Please find the attached PDF with your results.")
+    subject = "Your ONTRAC XMOR® Bucket Comparison Results"
+    content = Content("text/plain", "Please find the attached PDF with your results!\n\nThank you for using ONTRAC'S Bucket comparison tool, we hope to hear from you soon!")
     
     # Create the email object
     mail = Mail(from_email, to_email, subject, content)
