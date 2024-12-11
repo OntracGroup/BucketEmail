@@ -988,7 +988,10 @@ if st.session_state.calculate_button:
             
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
-                st.subheader('Would you like a side-by-side comparison sent to your email?')
+                st.markdown(
+                "<h2 style='color: gold; text-decoration: underline;'>Would you like a side-by-side comparison sent to your email?</h2>",
+                unsafe_allow_html=True
+            )
                 collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl)
         else:
             st.warning("No suitable bucket found within SWL limits.")
