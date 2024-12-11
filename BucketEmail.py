@@ -112,49 +112,12 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 4️⃣ Add Section 3: Swings Simulation
-    elements.append(Paragraph("Swings Simulation", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data)
-    swings_simulation_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-    ]))
-    elements.append(swings_simulation_table)
-    elements.append(Spacer(1, 20))  # Space below the table
+    # 4️⃣ Add more sections (similar to the previous two)
 
-    # 5️⃣ Add Section 4: Improved Cycle
-    elements.append(Paragraph("Improved Cycle", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data)
-    improved_cycle_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-    ]))
-    elements.append(improved_cycle_table)
-    
-    # Build the PDF
+    # Build the PDF document
     doc.build(elements)
     pdf_output.seek(0)
-    
+
     return pdf_output
 
     
