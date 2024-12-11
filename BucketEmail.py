@@ -90,8 +90,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('FONTSIZE', (0, 0), (-1, 0), 13),  # Applies a font size of 16 to the header row
+        ('PADDING', (0, 0), (-1, -1), 15),  # Increased padding for readability
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
@@ -99,10 +101,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTSIZE', (0, 1), (-1, -1), 12),  # Increased font size in table
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 15),  # Increased padding for readability
-        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
         ('BACKGROUND', (0, 1), (-1, 1), colors.HexColor("#1e1e1e")),  # Header row color
         ('TEXTCOLOR', (0, 1), (-1, 1), colors.HexColor("#ffffff")),
-        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))  # Alternating row colors
     ]))
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
@@ -118,8 +118,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
+        ('FONTSIZE', (0, 0), (-1, 0), 13),  # Applies a font size of 16 to the header row
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('PADDING', (0, 0), (-1, 0), 15),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
@@ -128,7 +130,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 15),
         ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
@@ -144,8 +145,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
+        ('FONTSIZE', (0, 0), (-1, 0), 13),  # Applies a font size of 16 to the header row
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('PADDING', (0, 0), (-1, 0), 15),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
@@ -154,7 +157,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 15),
         ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
@@ -170,8 +172,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center table headings
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('FONTSIZE', (0, 0), (-1, 0), 13),  # Applies a font size of 16 to the header row
+        ('PADDING', (0, 0), (-1, 0), 15),
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
@@ -180,7 +184,6 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 15),
         ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-        ('ALTERNATEBACKGROUND', (0, 2), (-1, -1), colors.HexColor("#2a2a2a"))
     ]))
     elements.append(improved_cycle_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
