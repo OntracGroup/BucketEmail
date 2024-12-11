@@ -42,7 +42,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Set background color for the entire page (dark mode)
     def add_dark_mode_background(canvas, doc):
-        canvas.setFillColor(colors.HexColor("#3e3e3e"))  # Dark background color
+        canvas.setFillColor(colors.HexColor("#1f1f1f"))  # Dark background color
         canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)  # Fill the page
     
     elements = []  # List of all elements to be added to the PDF
