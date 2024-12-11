@@ -239,7 +239,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
             ]))
     
     elements.append(improved_cycle_table)
-    elements.append(Spacer(1, 12))  # Reduced space below the table
+    elements.append(Spacer(1, 22))  # Reduced space below the table
 
     # 4️⃣ Add Section: Detailed Notes and Calculations
     elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
