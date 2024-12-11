@@ -31,12 +31,6 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-import io
-
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
@@ -87,8 +81,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data)
-    side_by_side_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row color
+    side_by_side_table.setStyle(TableStyle([  # Apply dark background to table
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -99,11 +93,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 20),  # Double padding
-        ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # First row of data
-        ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Second row of data
-        ('BACKGROUND', (0, 4, -1, -1), colors.HexColor("#1e1e1e")),  # Alternate row colors
-        ('BACKGROUND', (0, 5, -1, -1), colors.HexColor("#2a2a2a")),
+        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 20))  # Space below the table
@@ -116,7 +106,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
     loadout_productivity_table = Table(loadout_productivity_table_data)
     loadout_productivity_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -127,12 +117,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 20),  # Double padding
-        ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # Row 1
-        ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Row 2
-        ('BACKGROUND', (0, 4, -1, -1), colors.HexColor("#1e1e1e")),  # Row 3
-        ('BACKGROUND', (0, 5, -1, -1), colors.HexColor("#2a2a2a")),  # Row 4
-        ('BACKGROUND', (0, 6, -1, -1), colors.HexColor("#1e1e1e")),  # Row 5
+        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(loadout_productivity_table)
     elements.append(Spacer(1, 20))  # Space below the table
@@ -145,7 +130,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
     swings_simulation_table = Table(swings_simulation_table_data)
     swings_simulation_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -156,24 +141,20 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 20),  # Double padding
-        ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # Row 1
-        ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Row 2
-        ('BACKGROUND', (0, 4, -1, -1), colors.HexColor("#1e1e1e")),  # Row 3
-        ('BACKGROUND', (0, 5, -1, -1), colors.HexColor("#2a2a2a")),  # Row 4
+        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Section 4: Improved Cycle Time Simulation
-    elements.append(Paragraph("<u>Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
+    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
+    elements.append(Paragraph("<u>10% Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
     improved_cycle_table = Table(improved_cycle_table_data)
     improved_cycle_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Header row color
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
@@ -184,16 +165,14 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 10),
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 20),  # Double padding
-        ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # Row 1
-        ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Row 2
+        ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(improved_cycle_table)
     
-    # Build the document
+    # Build the document with dark mode background applied
     doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
-    
-    # Return the PDF in BytesIO format
+
+    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
     pdf_output.seek(0)
     return pdf_output
     
@@ -918,3 +897,4 @@ if st.session_state.calculate_button:
 # Run the Streamlit app
 if __name__ == '__main__':
     app()
+
