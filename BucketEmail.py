@@ -92,7 +92,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
-        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
+        #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
         
         # Body row styles
@@ -101,11 +101,11 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
+        #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#ffffff")),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -131,7 +131,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
-        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
+        #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
         
         # Body row styles
@@ -140,11 +140,11 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
+        #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#ffffff")),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -169,7 +169,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
-        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
+        #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
         
         # Body row styles
@@ -178,11 +178,11 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
+        #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#ffffff")),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -208,7 +208,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
-        ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
+        #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
         
         # Body row styles
@@ -217,11 +217,11 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
         ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
+        #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#ffffff")),
+        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
