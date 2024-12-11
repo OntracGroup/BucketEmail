@@ -52,6 +52,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     heading_style.fontSize = 18
     heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
+    heading_style.underline = True  # Underline headings
     
     subheading_style.fontSize = 14
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
@@ -158,12 +159,17 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(improved_cycle_table)
+
+    # Set background color for the page (dark mode)
+    def add_dark_mode_background(canvas, doc):
+        canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
+        canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
     
-    # Build the PDF document
-    doc.build(elements)
+    # Apply the dark mode background to the first page and all subsequent pages
+    doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
+
+    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
     pdf_output.seek(0)
-    
-    return pdf_output
 
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
