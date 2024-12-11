@@ -31,6 +31,12 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
@@ -154,12 +160,13 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # Row 1
         ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Row 2
         ('BACKGROUND', (0, 4, -1, -1), colors.HexColor("#1e1e1e")),  # Row 3
+        ('BACKGROUND', (0, 5, -1, -1), colors.HexColor("#2a2a2a")),  # Row 4
     ]))
     elements.append(swings_simulation_table)
     elements.append(Spacer(1, 20))  # Space below the table
 
-    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("<u>10% Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
+    # 5️⃣ Add Section 4: Improved Cycle Time Simulation
+    elements.append(Paragraph("<u>Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
@@ -180,15 +187,13 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 0), (-1, -1), 20),  # Double padding
         ('BACKGROUND', (0, 2, -1, -1), colors.HexColor("#1e1e1e")),  # Row 1
         ('BACKGROUND', (0, 3, -1, -1), colors.HexColor("#2a2a2a")),  # Row 2
-        ('BACKGROUND', (0, 4, -1, -1), colors.HexColor("#1e1e1e")),  # Row 3
     ]))
-
     elements.append(improved_cycle_table)
     
-    # Build the document with dark mode background applied
+    # Build the document
     doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
-
-    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
+    
+    # Return the PDF in BytesIO format
     pdf_output.seek(0)
     return pdf_output
     
