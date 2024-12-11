@@ -245,8 +245,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
     
     # Now add the paragraph text with the correct style
-    para = Paragraph(paragraph, normal_style)
-    elements.append(para)
+    elements.append(paragraph)
     
     # Add space after the section
     elements.append(Spacer(1, 12))  # Adjust spacing as needed
@@ -911,9 +910,15 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                         f"operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.\n\n"
                         f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg"
                     )
-                
+
+                    # Normal body text style
+                    normal_style = styles['Normal']
+                    normal_style.fontName = 'Helvetica'
+                    normal_style.fontSize = 12  # Slightly larger font size for normal content
+                    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
+    
                     # Create the Paragraph element
-                    paragraph = Paragraph(paragraph_text)
+                    paragraph = Paragraph(paragraph_text, normal_style)
 
         # Return both the paragraph and the data frames
         return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
