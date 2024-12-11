@@ -382,14 +382,14 @@ def generate_html_table(data, title):
     return html
 
 # Google Sheets credentials and setup
-def connect_to_google_sheet(sheet_name):
-    """Connect to Google Sheets and return a sheet object."""
-    scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
-    credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
-    credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
-    client = gspread.authorize(credentials)
-    sheet = client.open("bucket_email").worksheet("Sheet1")  # Open the first sheet of the workbook
-    return sheet
+#def connect_to_google_sheet(sheet_name):
+    #"""Connect to Google Sheets and return a sheet object."""
+    #scope = ['https://www.googleapis.com/auth/spreadsheets', 'https://www.googleapis.com/auth/drive']
+    #credentials_dict = st.secrets["gcp_service_account"]  # Load service account credentials from Streamlit secrets
+    #credentials = Credentials.from_service_account_info(credentials_dict, scopes=scope)
+    #client = gspread.authorize(credentials)
+    #sheet = client.open("bucket_email").worksheet("Sheet1")  # Open the first sheet of the workbook
+    #return sheet
 
 # Define custom CSS
 st.markdown("""
@@ -929,7 +929,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         # Return both the paragraph and the data frames
         return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
-def collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl):
+def collect_email(paragraph, user_data, optimal_bucket, comparison_df, swl):
     """Collect the user's email and store it in HubSpot."""
     if 'email_form_submitted' not in st.session_state:
         st.session_state.email_form_submitted = False
@@ -1001,13 +1001,12 @@ if st.session_state.calculate_button:
             paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df = comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
             #pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
             
-            # Ask for email after successful calculation
-            if sheet:  # Ensure the sheet is connected
-                st.markdown(
-                "<h2 style='color: #f4c542; text-decoration: underline; font-size: 24px;'>Would you like a free side-by-side comparison sent to your email?</h2>",
-                unsafe_allow_html=True
+
+            st.markdown(
+            "<h2 style='color: #f4c542; text-decoration: underline; font-size: 24px;'>Would you like a free side-by-side comparison sent to your email?</h2>",
+            unsafe_allow_html=True
             )
-                collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl)
+            collect_email(paragraph, user_data, optimal_bucket, comparison_df, swl)
         else:
             st.warning("No suitable bucket found within SWL limits.")
     else:
