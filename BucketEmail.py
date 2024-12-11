@@ -245,7 +245,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
     
     # Now add the paragraph text with the correct style
-    para = Paragraph(paragraph, body_style)
+    para = Paragraph(paragraph, normal_style)
     elements.append(para)
     
     # Add space after the section
