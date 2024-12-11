@@ -26,6 +26,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment
 import base64
 from PIL import Image
 import math
+import requests
 
 def add_section_title(title, df):
     """Add a section title and return the dataframe with title as the first row."""
