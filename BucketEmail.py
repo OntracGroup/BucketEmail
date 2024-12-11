@@ -66,13 +66,16 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     normal_style = styles['Normal']
     normal_style.fontSize = 10  # Small text for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
+
+    # Apply underline manually using a Paragraph style
+    heading_style.fontName = 'Helvetica-Bold'
     
     # 1️⃣ Add Title
-    elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
+    elements.append(Paragraph("ONTRAC XMOR® Bucket Comparison", title_style))
     elements.append(Spacer(1, 12))  # Space below the title
 
     # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
-    elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
+    elements.append(Paragraph("<u>Side-by-Side Bucket Comparison</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
@@ -96,7 +99,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Spacer(1, 20))  # Space below the table
 
     # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
-    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
+    elements.append(Paragraph("<u>Loadout Productivity & Truck Pass Simulation</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
@@ -120,7 +123,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Spacer(1, 20))  # Space below the table
 
     # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
-    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
+    elements.append(Paragraph("<u>1000 Swings Side-by-Side Simulation</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
@@ -144,7 +147,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(Spacer(1, 20))  # Space below the table
 
     # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
+    elements.append(Paragraph("<u>10% Improved Cycle Time Simulation</u>", heading_style))  # Underlined heading
     elements.append(Spacer(1, 8))  # Space below the heading
     
     # Remove redundant title row and create table data
