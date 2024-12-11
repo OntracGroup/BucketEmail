@@ -559,7 +559,7 @@ def send_email_with_pdf(email, pdf_file):
     attachment = Attachment(
         file_content=encoded_file,
         file_type='application/pdf',
-        file_name='comparison.pdf',
+        file_name='ONTRAC XMOR® Bucket Comparison.pdf',
         disposition='attachment'
     )
     
