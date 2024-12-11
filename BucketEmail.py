@@ -91,7 +91,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     # Apply the table styles
     side_by_side_table.setStyle(TableStyle([
         # Header row styles
-        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),  # Line above header
+        #('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),  # Line above header
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
@@ -130,7 +130,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
     loadout_productivity_table = Table(loadout_productivity_table_data)
     loadout_productivity_table.setStyle(TableStyle([
-        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
+        #('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
@@ -169,7 +169,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
     swings_simulation_table = Table(swings_simulation_table_data)
     swings_simulation_table.setStyle(TableStyle([
-        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
+        #('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
@@ -209,7 +209,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
     improved_cycle_table = Table(improved_cycle_table_data)
     improved_cycle_table.setStyle(TableStyle([
-        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
+        #('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#2a2a2a")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
