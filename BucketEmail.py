@@ -37,27 +37,33 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
+    
+    # Set background color for the entire page (dark mode)
+    def add_dark_mode_background(canvas, doc):
+        canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
+        canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)  # Fill the page
+    
     elements = []  # List of all elements to be added to the PDF
     
     # Set up document styles
     styles = getSampleStyleSheet()
-    title_style = styles['Title']
-    heading_style = styles['Heading1']
-    subheading_style = styles['Heading2']
-    normal_style = styles['Normal']
     
-    # Custom styles for dark mode
+    # Dark mode colors for the text
+    title_style = styles['Title']
     title_style.fontSize = 22
     title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
     
+    heading_style = styles['Heading1']
     heading_style.fontSize = 18
     heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
     heading_style.underline = True  # Underline headings
     
+    subheading_style = styles['Heading2']
     subheading_style.fontSize = 14
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
     subheading_style.underline = True  # Underline subheadings
     
+    normal_style = styles['Normal']
     normal_style.fontSize = 10  # Small text for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
     
@@ -72,7 +78,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data)
-    side_by_side_table.setStyle(TableStyle([
+    side_by_side_table.setStyle(TableStyle([  # Apply dark background to table
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
@@ -159,14 +165,13 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
     elements.append(improved_cycle_table)
+    
+    # Build the document with dark mode background applied
+    doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
 
-    # Set background color for the entire page (dark mode)
-    doc.pagesize = letter
-    doc.canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
-    doc.canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
-
-    # Build the document
-    doc.build(elements)
+    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
+    pdf_output.seek(0)
+    return pdf_output
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
