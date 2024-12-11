@@ -911,12 +911,14 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                         f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg"
                     )
 
+                    #styles
+                    styles = getSampleStyleSheet()
                     # Normal body text style
                     normal_style = styles['Normal']
                     normal_style.fontName = 'Helvetica'
                     normal_style.fontSize = 12  # Slightly larger font size for normal content
                     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
-    
+                    
                     # Create the Paragraph element
                     paragraph = Paragraph(paragraph_text, normal_style)
 
