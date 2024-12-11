@@ -31,9 +31,8 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-# Define the PDF generation function
-def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    pdf_output = io.BytesIO()
+def generate_pdf_table(data, title):
+    pdf_output = BytesIO()
 
     # Create PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
@@ -64,29 +63,76 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         table_data.append(row)
 
     # Create the table with colWidths set to '*' (auto size)
-    side_by_side_table = Table(table_data, colWidths='*')
+    table = Table(table_data, colWidths='*')
 
     # Ensure the table width stretches to fill the page width by adjusting _argW
-    side_by_side_table._argW = [doc.pagesize[0] / len(headers)] * len(headers)
+    table._argW = [doc.pagesize[0] / len(headers)] * len(headers)
 
-    # Set TableStyle for dark mode
-    side_by_side_table.setStyle(TableStyle([
+    # Table styling
+    table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for headers
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for headers
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Center-align headers
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Dark background for body
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Light text for body
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Dark grid lines
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),  # Smaller font size for content
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),  # Center-align all text
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for headers
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  # Padding below headers
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Darker background for rows
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Light gray text for rows
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Grid lines for all cells
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Regular font for rows
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  # Font size for all cells
+        ('PADDING', (0, 0), (-1, -1), 10),  # Padding inside cells
     ]))
 
-    # Add table to the PDF elements
-    elements.append(side_by_side_table)
+    # Add the table to the elements
+    elements.append(table)
+    
+    # Build the PDF document
+    doc.build(elements)
+    pdf_output.seek(0)
 
+    return pdf_output
+
+def generate_full_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+    # Define the PDF generation function for full report
+    pdf_output = BytesIO()
+
+    # Create PDF document
+    doc = SimpleDocTemplate(pdf_output, pagesize=letter)
+    elements = []  # Elements to be added to the PDF
+
+    # Set up title styles
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']
+    title_style.fontSize = 22
+    title_style.textColor = colors.HexColor("#f4c542")  # Yellow-Orange Title Color
+
+    # Add title to the PDF
+    elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
+    elements.append(Spacer(1, 12))  # Add space after title
+
+    # Section 1: Side-by-Side Bucket Comparison
+    elements.append(Paragraph("Side-by-Side Bucket Comparison", styles['Heading1']))
+    elements.append(Spacer(1, 8))  # Space below heading
+    elements.append(generate_pdf_table(side_by_side_df, "Side-by-Side Bucket Comparison"))
+    elements.append(Spacer(1, 20))  # Space below table
+
+    # Section 2: Loadout Productivity & Truck Pass Simulation
+    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", styles['Heading1']))
+    elements.append(Spacer(1, 8))  # Space below heading
+    elements.append(generate_pdf_table(loadout_productivity_df, "Loadout Productivity & Truck Pass Simulation"))
+    elements.append(Spacer(1, 20))  # Space below table
+
+    # Section 3: 1000 Swings Side-by-Side Simulation
+    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", styles['Heading1']))
+    elements.append(Spacer(1, 8))  # Space below heading
+    elements.append(generate_pdf_table(swings_simulation_df, "1000 Swings Side-by-Side Simulation"))
+    elements.append(Spacer(1, 20))  # Space below table
+
+    # Section 4: 10% Improved Cycle Time Simulation
+    elements.append(Paragraph("10% Improved Cycle Time Simulation", styles['Heading1']))
+    elements.append(Spacer(1, 8))  # Space below heading
+    elements.append(generate_pdf_table(improved_cycle_df, "10% Improved Cycle Time Simulation"))
+    
     # Build the PDF document
     doc.build(elements)
     pdf_output.seek(0)
