@@ -741,7 +741,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
     
        # Side-by-Side Bucket Comparison Data
         side_by_side_data = {
-            '           Description           ': [
+            '                Description                ': [
                  'Capacity (m³)', 'Material Density (kg/m³)', 'Bucket Payload (kg)', 
                 'Total Suspended Load (kg)'
             ],
@@ -765,7 +765,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         
         # Loadout Productivity & Truck Pass Simulation Data
         loadout_productivity_data = {
-            '           Description           ': [
+            '                Description                ': [
                  f"{truck_brand} {truck_model} Payload (kg)", 'Avg No. Swings to Fill Truck', 
                 'Time to Fill Truck (min)', 'Avg Trucks/Hour @ 75% eff', 'Swings/Hour', 'Tonnes/Hour'
             ],
@@ -794,7 +794,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         
         # 1000 Swings Side-by-Side Simulation Data
         swings_simulation_data = {
-            '           Description           ': [
+            '                Description                ': [
                  'Number of Swings', 'Total Volume (m³)', 
                 'Total Tonnes', 'Total Trucks'
             ],
@@ -820,7 +820,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         
         # 10% Improved Cycle Time Simulation Data
         improved_cycle_data = {
-            '           Description           ': [
+            '                Description                ': [
                  'Number of Swings', 'Total Volume (m³)', 
                 'Total Tonnes', 'Total Trucks'
             ],
