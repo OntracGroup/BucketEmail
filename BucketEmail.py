@@ -844,7 +844,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df):
             pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
             # Send the email with the PDF attached
             send_email_with_pdf(email, pdf_file)
-            st.success("Please check your inbox!")
+            st.success("Success! Your information has been send to your your inbox!")
             
             try:
                 sheet.append_row([email])  # Add email to the Google Sheet
