@@ -887,7 +887,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         ], ignore_index=True)
     
         if final_df is not None:
-                st.title('XMOR® Productivity Comparison')
+                #st.title('XMOR® Productivity Comparison')
             
                 # Call the function for each table with the appropriate title
                 #st.markdown(generate_html_table(side_by_side_data, "Side-by-Side Bucket Comparison"), unsafe_allow_html=True)
@@ -989,7 +989,7 @@ if st.session_state.calculate_button:
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
                 st.markdown(
-                "<h2 style='color: #f4c542; text-decoration: underline; font-size: 14px;'>Would you like a side-by-side comparison sent to your email?</h2>",
+                "<h2 style='color: #f4c542; text-decoration: underline; font-size: 24px;'>Would you like a free side-by-side comparison sent to your email?</h2>",
                 unsafe_allow_html=True
             )
                 collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl)
