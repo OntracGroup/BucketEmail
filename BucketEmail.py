@@ -933,7 +933,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df, swl):
         if "@" in email and "." in email:  # Basic email validation
             
             # Generate PDF with the results
-            pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, optimal_bucket, swl)
+            pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, swl)
             # Send the email with the PDF attached
             send_email_with_pdf(email, pdf_file)
             st.success("Success! Please check your inbox!")
