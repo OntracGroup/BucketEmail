@@ -55,16 +55,16 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Dark mode colors for the text
     title_style = styles['Title']
-    title_style.fontSize = 24  # Larger font for the title
+    title_style.fontSize = 20  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
     
     heading_style = styles['Heading1']
-    heading_style.fontSize = 20  # Bigger heading font size
+    heading_style.fontSize = 16  # Bigger heading font size
     heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
     heading_style.underline = True  # Underline headings
     
     subheading_style = styles['Heading2']
-    subheading_style.fontSize = 16
+    subheading_style.fontSize = 14
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
     subheading_style.underline = True  # Underline subheadings
     
@@ -90,7 +90,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
+        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
@@ -99,7 +99,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
+        ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
@@ -129,7 +129,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
+        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
@@ -138,7 +138,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
+        ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
@@ -167,7 +167,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
+        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
@@ -176,7 +176,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
+        ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
@@ -206,7 +206,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('FONTSIZE', (0, 0), (-1, 0), 14),  # Larger font for header
+        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
@@ -215,7 +215,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 12),  # Font size for body rows
+        ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
