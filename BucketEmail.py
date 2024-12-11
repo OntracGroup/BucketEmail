@@ -241,6 +241,26 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     elements.append(improved_cycle_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
 
+    # 4️⃣ Add Section: Detailed Notes and Calculations
+    elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
+    
+    # Optional notes about dump truck fill factor
+    if dump_truck_payload_new != dump_truck_payload:
+        elements.append(Paragraph(f"*Dump Truck fill factor of {(100 * dump_truck_payload_new / dump_truck_payload):.1f}% applied for XMOR® Bucket pass matching.", body_style))
+    
+    if dump_truck_payload_old != dump_truck_payload:
+        elements.append(Paragraph(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.", body_style))
+    
+    # Provide additional details for calculations
+    elements.append(Paragraph(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg", body_style))
+    elements.append(Paragraph(f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg", body_style))
+    elements.append(Paragraph(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.", body_style))
+    elements.append(Paragraph(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg", body_style))
+    
+    # Add space after the section
+    elements.append(Spacer(1, 12))  # Adjust spacing as needed
+
+
     # Build the document with dark mode background applied
     doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
 
