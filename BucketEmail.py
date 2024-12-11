@@ -930,7 +930,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
 def collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl):
-    """Collect the user's email and store it in the Google Sheet."""
+    """Collect the user's email and store it in HubSpot."""
     if 'email_form_submitted' not in st.session_state:
         st.session_state.email_form_submitted = False
     
@@ -948,7 +948,8 @@ def collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, sw
             st.success("Success! Please check your inbox!")
             
             try:
-                sheet.append_row([email])  # Add email to the Google Sheet
+                # Add email to HubSpot instead of Google Sheets
+                add_contact_to_hubspot(email)
                 
                 # Allow users to submit another email
                 st.session_state.email_form_submitted = True
@@ -957,12 +958,26 @@ def collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, sw
         else:
             st.error("Please enter a valid email address.")
             
-# Connect to Google Sheets
-try:
-    sheet = connect_to_google_sheet("bucket_email")  # Your Google Sheet name
-except Exception as e:
-    st.error(f"Unable to connect to Google Sheets: {e}")
-    sheet = None
+def add_contact_to_hubspot(email):
+    """Adds a contact to HubSpot."""
+    HUBSPOT_API_KEY = st.secrets["hubspot"]["api_key"]  # Get API key from Streamlit secrets
+    url = "https://api.hubspot.com/crm/v3/objects/contacts"
+    headers = {
+        "Authorization": f"Bearer {HUBSPOT_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    data = {
+        "properties": {
+            "email": email
+        }
+    }
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 201:
+        st.success(f"Successfully added {email} to HubSpot!")
+    elif response.status_code == 409:
+        st.warning(f"The email {email} already exists in HubSpot.")
+    else:
+        st.error(f"Failed to add {email}. Error: {response.json()}")
     
 # **CALCULATION LOGIC**
 # Run calculations only when the button is pressed
