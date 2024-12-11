@@ -243,23 +243,10 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # 4️⃣ Add Section: Detailed Notes and Calculations
     elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
-    
-    # Optional notes about dump truck fill factor
-    if dump_truck_payload_new != dump_truck_payload:
-        elements.append(Paragraph(f"*Dump Truck fill factor of {(100 * dump_truck_payload_new / dump_truck_payload):.1f}% applied for XMOR® Bucket pass matching.", body_style))
-    
-    if dump_truck_payload_old != dump_truck_payload:
-        elements.append(Paragraph(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.", body_style))
-    
-    # Provide additional details for calculations
-    elements.append(Paragraph(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg", body_style))
-    elements.append(Paragraph(f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg", body_style))
-    elements.append(Paragraph(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.", body_style))
-    elements.append(Paragraph(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg", body_style))
+    elements.append(paragraph)
     
     # Add space after the section
     elements.append(Spacer(1, 12))  # Adjust spacing as needed
-
 
     # Build the document with dark mode background applied
     doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
@@ -912,13 +899,21 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                 if dump_truck_payload_old != dump_truck_payload:
                     st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.")
             
-                # Provide additional details for calculations
-                st.write(f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg")
-                st.write(f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg")
-                st.write(f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, {user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.")
-                st.write(f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg")
+                    # Create the text for the paragraph
+                    paragraph_text = (
+                        f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg\n\n"
+                        f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg\n\n"
+                        f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, "
+                        f"{user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, "
+                        f"operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.\n\n"
+                        f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg"
+                    )
+                
+                    # Create the Paragraph element
+                    paragraph = Paragraph(paragraph_text, body_style)
 
-        return side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
+        # Return both the paragraph and the data frames
+        return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
 def collect_email(sheet, user_data, optimal_bucket, comparison_df, swl):
     """Collect the user's email and store it in the Google Sheet."""
@@ -933,7 +928,7 @@ def collect_email(sheet, user_data, optimal_bucket, comparison_df, swl):
         if "@" in email and "." in email:  # Basic email validation
             
             # Generate PDF with the results
-            pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, swl)
+            pdf_file = generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, swl)
             # Send the email with the PDF attached
             send_email_with_pdf(email, pdf_file)
             st.success("Success! Please check your inbox!")
@@ -974,13 +969,13 @@ if st.session_state.calculate_button:
         if optimal_bucket:
             # Generate DataFrame for comparison
             #comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
-            side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df = comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
+            paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df = comparison_df = generate_comparison_df(user_data, optimal_bucket, swl)
             #pdf_file = generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df)
             
             # Ask for email after successful calculation
             if sheet:  # Ensure the sheet is connected
                 st.subheader('Would you like a side-by-side comparison sent to your email?')
-                collect_email(sheet, user_data, optimal_bucket, comparison_df, swl)
+                collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl)
         else:
             st.warning("No suitable bucket found within SWL limits.")
     else:
