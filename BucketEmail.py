@@ -915,7 +915,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
         # Return both the paragraph and the data frames
         return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
-def collect_email(sheet, user_data, optimal_bucket, comparison_df, swl):
+def collect_email(paragraph, sheet, user_data, optimal_bucket, comparison_df, swl):
     """Collect the user's email and store it in the Google Sheet."""
     if 'email_form_submitted' not in st.session_state:
         st.session_state.email_form_submitted = False
