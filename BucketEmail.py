@@ -32,7 +32,7 @@ def add_section_title(title, df):
 
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
-    pdf_output = io.BytesIO()
+    pdf_output = BytesIO()
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
@@ -70,7 +70,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data, colWidths='*', width=doc.pagesize[0])
-    side_by_side_table.setStyle(TableStyle([
+    side_by_side_table.setStyle(TableStyle([ 
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
@@ -94,7 +94,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
     loadout_productivity_table = Table(loadout_productivity_table_data, colWidths='*', width=doc.pagesize[0])
-    loadout_productivity_table.setStyle(TableStyle([
+    loadout_productivity_table.setStyle(TableStyle([ 
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
@@ -118,7 +118,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
     swings_simulation_table = Table(swings_simulation_table_data, colWidths='*', width=doc.pagesize[0])
-    swings_simulation_table.setStyle(TableStyle([
+    swings_simulation_table.setStyle(TableStyle([ 
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
@@ -142,7 +142,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
     improved_cycle_table = Table(improved_cycle_table_data, colWidths='*', width=doc.pagesize[0])
-    improved_cycle_table.setStyle(TableStyle([
+    improved_cycle_table.setStyle(TableStyle([ 
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
