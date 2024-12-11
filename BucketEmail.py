@@ -910,7 +910,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                     )
                 
                     # Create the Paragraph element
-                    paragraph = Paragraph(paragraph_text, body_style)
+                    paragraph = Paragraph(paragraph_text)
 
         # Return both the paragraph and the data frames
         return paragraph, side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
