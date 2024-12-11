@@ -243,8 +243,10 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
 
     # 4️⃣ Add Section: Detailed Notes and Calculations
     elements.append(Paragraph("<u>Detailed Notes and Calculations</u>", heading_style))  # Underlined heading
-    paragraph.setStyle(body_style)
-    elements.append(paragraph)
+    
+    # Now add the paragraph text with the correct style
+    para = Paragraph(paragraph, body_style)
+    elements.append(para)
     
     # Add space after the section
     elements.append(Spacer(1, 12))  # Adjust spacing as needed
