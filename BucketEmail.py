@@ -32,7 +32,7 @@ def add_section_title(title, df):
     return df_with_title
 
 # Define the PDF generation function
-def generate_pdf(data, title):
+def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     pdf_output = io.BytesIO()
 
     # Create PDF document
