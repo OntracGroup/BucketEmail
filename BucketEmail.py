@@ -43,8 +43,8 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     pdf_output = io.BytesIO()
 
     # 1️⃣ Register Arial font
-    pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial-Bold', 'arialbd.ttf'))
+    #pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+    #pdfmetrics.registerFont(TTFont('Arial-Bold', 'arialbd.ttf'))
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
