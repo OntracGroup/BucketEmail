@@ -6,8 +6,10 @@
 import streamlit as st
 import pandas as pd
 import smtplib
-from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib.pagesizes import letter, landscape, A4
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen import canvas
@@ -39,6 +41,10 @@ from reportlab.lib.styles import getSampleStyleSheet
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
+
+    # 1️⃣ Register Arial font
+    pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial-Bold', 'arialbd.ttf'))
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
@@ -73,7 +79,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
 
     # Apply underline manually using a Paragraph style
-    heading_style.fontName = 'Helvetica-Bold'
+    heading_style.fontName = 'Arial-Bold'
     
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC XMOR® Bucket Comparison", title_style))
@@ -89,7 +95,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     side_by_side_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
+        ('FONTNAME', (0, 0), (-1, 0), 'Arial-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
@@ -98,7 +104,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         # Body row styles
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
         ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
@@ -128,7 +134,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     loadout_productivity_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
+        ('FONTNAME', (0, 0), (-1, 0), 'Arial-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
@@ -137,7 +143,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         # Body row styles
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
         ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
@@ -166,7 +172,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     swings_simulation_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
+        ('FONTNAME', (0, 0), (-1, 0), 'Arial-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
@@ -175,7 +181,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         # Body row styles
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
         ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
@@ -205,7 +211,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     improved_cycle_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
+        ('FONTNAME', (0, 0), (-1, 0), 'Arial-Bold'),  # Bold font for header
         ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
         #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
@@ -214,7 +220,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         # Body row styles
         ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
         ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (0, 1), (-1, -1), 'Arial'),
         ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
