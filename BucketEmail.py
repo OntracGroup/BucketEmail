@@ -42,7 +42,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     
     # Set background color for the entire page (dark mode)
     def add_dark_mode_background(canvas, doc):
-        canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
+        canvas.setFillColor(colors.HexColor("#3a3a3a"))  # Dark background color
         canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)  # Fill the page
     
     elements = []  # List of all elements to be added to the PDF
@@ -53,7 +53,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Title style
     title_style = styles['Title']
     title_style.fontName = 'Helvetica-Bold'
-    title_style.fontSize = 20  # Larger font for the title
+    title_style.fontSize = 24  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
     
     # Heading 1 style
@@ -83,7 +83,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("<u>Side-by-Side Bucket Comparison</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 6))  # Reduced space between sections
+    elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
@@ -122,7 +122,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
     elements.append(Paragraph("<u>Loadout Productivity & Truck Pass Simulation</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 6))  # Reduced space between sections
+    elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
@@ -160,7 +160,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
   # 4️⃣ Add Section 3: Swings Simulation Results
     elements.append(Paragraph("<u>Swings Simulation Results</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 6))  # Reduced space between sections
+    elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
@@ -199,7 +199,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # 5️⃣ Add Section 4: Improved Cycle Time and Loadout Efficiency
     elements.append(Paragraph("<u>Improved Cycle Time and Loadout Efficiency</u>", heading_style))  # Underlined heading
-    elements.append(Spacer(1, 6))  # Reduced space between sections
+    elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
