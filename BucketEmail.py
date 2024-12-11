@@ -53,7 +53,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Title style
     title_style = styles['Title']
     title_style.fontName = 'Helvetica-Bold'
-    title_style.fontSize = 26  # Larger font for the title
+    title_style.fontSize = 24  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
     
     # Heading 1 style
@@ -107,7 +107,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -146,7 +146,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -184,7 +184,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -223,7 +223,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 1, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
