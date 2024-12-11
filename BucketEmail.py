@@ -27,24 +27,26 @@ import base64
 from PIL import Image
 import math
 
+# 1️⃣ Register Arial font - Place it at the top of the script (before any functions)
+try:
+    # Use absolute paths to avoid "file not found" errors
+    font_path_arial = r'C:/Windows/Fonts/arial.ttf'  # Update to your system's font path if needed
+    font_path_arial_bold = r'C:/Windows/Fonts/arialbd.ttf'  # Bold version
+
+    pdfmetrics.registerFont(TTFont('Arial', font_path_arial))
+    pdfmetrics.registerFont(TTFont('Arial-Bold', font_path_arial_bold))
+except Exception as e:
+    print(f"Error registering fonts: {e}")
+
 def add_section_title(title, df):
     """Add a section title and return the dataframe with title as the first row."""
     title_row = pd.DataFrame([[title] * len(df.columns)], columns=df.columns)
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-from reportlab.lib.pagesizes import letter
-from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
-
 def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
-
-    # 1️⃣ Register Arial font
-    #pdfmetrics.registerFont(TTFont('Arial', 'arial.ttf'))
-    #pdfmetrics.registerFont(TTFont('Arial-Bold', 'arialbd.ttf'))
     
     # Create the PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
