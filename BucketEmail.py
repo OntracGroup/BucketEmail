@@ -108,7 +108,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
     
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),  # Grid lines for the whole table
+        ('GRID', (0, 0), (-1, -1), 1.5, colors.HexColor("#333333")),  # Grid lines for the whole table
     ]))
     
     # Alternating row colors for body rows (applies after the table style)
@@ -149,7 +149,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 1.5, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -188,7 +188,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 1.5, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
@@ -228,7 +228,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
         
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 1.5, colors.HexColor("#333333")),
     ]))
 
     # Alternating row colors
