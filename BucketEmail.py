@@ -31,7 +31,7 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-def generate_pdf(data, title):
+def generate_pdf_table(data, title):
     pdf_output = BytesIO()
 
     # Create PDF document
@@ -92,7 +92,7 @@ def generate_pdf(data, title):
 
     return pdf_output
 
-def generate_full_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
+def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
     # Define the PDF generation function for full report
     pdf_output = BytesIO()
 
