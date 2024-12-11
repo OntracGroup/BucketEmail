@@ -31,138 +31,66 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df):
-    """Generate a polished PDF with user results and separate tables for each section."""
-    pdf_output = BytesIO()
-    
-    # Create the PDF document
+# Define the PDF generation function
+def generate_pdf_table(data, title):
+    pdf_output = io.BytesIO()
+
+    # Create PDF document
     doc = SimpleDocTemplate(pdf_output, pagesize=letter)
-    elements = []  # List of all elements to be added to the PDF
-    
-    # Set up document styles
+    elements = []  # Elements to be added to the PDF
+
+    # Set up title styles
     styles = getSampleStyleSheet()
     title_style = styles['Title']
-    heading_style = styles['Heading1']
-    subheading_style = styles['Heading2']
-    normal_style = styles['Normal']
-    
-    # Custom styles for dark mode
     title_style.fontSize = 22
-    title_style.textColor = colors.HexColor("#f4c542")  # Orange title color
-    
-    heading_style.fontSize = 18
-    heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
-    
-    subheading_style.fontSize = 14
-    subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
-    subheading_style.underline = True  # Underline subheadings
-    
-    normal_style.fontSize = 10  # Small text for normal content
-    normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
-    
-    # 1️⃣ Add Title
-    elements.append(Paragraph("ONTRAC Excavator Bucket Optimization Results", title_style))
-    elements.append(Spacer(1, 12))  # Space below the title
+    title_style.textColor = colors.HexColor("#f4c542")  # Yellow-Orange Title Color
 
-    # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
-    elements.append(Paragraph("Side-by-Side Bucket Comparison", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
-    side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
-    side_by_side_table = Table(side_by_side_table_data, colWidths='*', width=doc.pagesize[0])
-    side_by_side_table.setStyle(TableStyle([ 
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+    # Add title to the PDF
+    elements.append(Paragraph(title, title_style))
+    elements.append(Spacer(1, 12))  # Add space after title
+
+    # Prepare table data
+    headers = list(data.keys())
+    num_rows = max(len(data[header]) for header in headers)
+
+    table_data = [headers]  # First row contains headers
+
+    # Add rows, ensuring that missing data is handled gracefully
+    for i in range(num_rows):
+        row = []
+        for header in headers:
+            value = data[header][i] if i < len(data[header]) else ""
+            row.append(value)
+        table_data.append(row)
+
+    # Create the table with colWidths set to '*' (auto size)
+    side_by_side_table = Table(table_data, colWidths='*')
+
+    # Ensure the table width stretches to fill the page width by adjusting _argW
+    side_by_side_table._argW = [doc.pagesize[0] / len(headers)] * len(headers)
+
+    # Set TableStyle for dark mode
+    side_by_side_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for headers
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for headers
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Center-align headers
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Dark background for body
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Light text for body
+        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),  # Dark grid lines
         ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
+        ('FONTSIZE', (0, 1), (-1, -1), 10),  # Smaller font size for content
         ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
         ('PADDING', (0, 0), (-1, -1), 10),
     ]))
+
+    # Add table to the PDF elements
     elements.append(side_by_side_table)
-    elements.append(Spacer(1, 20))  # Space below the table
 
-    # 3️⃣ Add Section 2: Loadout Productivity & Truck Pass Simulation
-    elements.append(Paragraph("Loadout Productivity & Truck Pass Simulation", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
-    loadout_productivity_table_data = [loadout_productivity_df.columns.to_list()] + loadout_productivity_df.values.tolist()
-    loadout_productivity_table = Table(loadout_productivity_table_data, colWidths='*', width=doc.pagesize[0])
-    loadout_productivity_table.setStyle(TableStyle([ 
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
-    ]))
-    elements.append(loadout_productivity_table)
-    elements.append(Spacer(1, 20))  # Space below the table
-
-    # 4️⃣ Add Section 3: 1000 Swings Side-by-Side Simulation
-    elements.append(Paragraph("1000 Swings Side-by-Side Simulation", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
-    swings_simulation_table_data = [swings_simulation_df.columns.to_list()] + swings_simulation_df.values.tolist()
-    swings_simulation_table = Table(swings_simulation_table_data, colWidths='*', width=doc.pagesize[0])
-    swings_simulation_table.setStyle(TableStyle([ 
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
-    ]))
-    elements.append(swings_simulation_table)
-    elements.append(Spacer(1, 20))  # Space below the table
-
-    # 5️⃣ Add Section 4: 10% Improved Cycle Time Simulation
-    elements.append(Paragraph("10% Improved Cycle Time Simulation", heading_style))
-    elements.append(Spacer(1, 8))  # Space below the heading
-    
-    # Remove redundant title row and create table data
-    improved_cycle_table_data = [improved_cycle_df.columns.to_list()] + improved_cycle_df.values.tolist()
-    improved_cycle_table = Table(improved_cycle_table_data, colWidths='*', width=doc.pagesize[0])
-    improved_cycle_table.setStyle(TableStyle([ 
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('GRID', (0, 0), (-1, -1), 0.25, colors.HexColor("#333333")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 1), (-1, -1), 10),
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        ('PADDING', (0, 0), (-1, -1), 10),
-    ]))
-    elements.append(improved_cycle_table)
-    
     # Build the PDF document
     doc.build(elements)
     pdf_output.seek(0)
-    
+
     return pdf_output
 
     
