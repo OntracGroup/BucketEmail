@@ -895,19 +895,22 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
                 st.markdown(generate_html_table(swings_simulation_data, "1000 Swings Side-by-Side Simulation"), unsafe_allow_html=True)
                 st.markdown(generate_html_table(improved_cycle_data, "10% Improved Cycle Time Simulation"), unsafe_allow_html=True)
             
-                # Optional notes about dump truck fill factor
-                if dump_truck_payload_new != dump_truck_payload:
-                    st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_new / dump_truck_payload):.1f}% applied for XMOR® Bucket pass matching.")
-                if dump_truck_payload_old != dump_truck_payload:
-                    st.write(f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.")
-            
-                    # Create the text for the paragraph
-                    paragraph_text = (
-                        f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg\n\n"
-                        f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg\n\n"
+
+                    paragraph_text = ""
+
+                    # Optional notes about dump truck fill factor
+                    if dump_truck_payload_new != dump_truck_payload:
+                        paragraph_text += f"*Dump Truck fill factor of {(100 * dump_truck_payload_new / dump_truck_payload):.1f}% applied for XMOR® Bucket pass matching.<br/>"
+                    if dump_truck_payload_old != dump_truck_payload:
+                        paragraph_text += f"*Dump Truck fill factor of {(100 * dump_truck_payload_old / dump_truck_payload):.1f}% applied for Old Bucket pass matching.<br/>"
+                    
+                    # Continue with the rest of the paragraph text
+                    paragraph_text += (
+                        f"Total Suspended Load (XMOR® Bucket): {optimal_bucket['total_bucket_weight']:.0f}kg<br/>"
+                        f"Safe Working Load at {user_data['reach']}m reach ({user_data['make']} {user_data['model']}): {swl:.0f}kg<br/>"
                         f"Calculations based on the {user_data['make']} {user_data['model']} with a {user_data['boom_length']}m boom, "
                         f"{user_data['arm_length']}m arm, {user_data['cwt']}kg counterweight, {user_data['shoe_width']}mm shoes, "
-                        f"operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.\n\n"
+                        f"operating at a reach of {user_data['reach']}m, and with a material density of {user_data['material_density']:.0f}kg/m³.<br/>"
                         f"Dump Truck: {truck_brand} {truck_model}, Rated payload = {user_data['dump_truck_payload'] * 1000:.0f}kg"
                     )
 
