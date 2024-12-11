@@ -27,14 +27,27 @@ import base64
 from PIL import Image
 import math
 
-# 1️⃣ Register Arial font - Place it at the top of the script (before any functions)
 try:
     # Use absolute paths to avoid "file not found" errors
-    font_path_arial = r'C:/Windows/Fonts/arial.ttf'  # Update to your system's font path if needed
+    font_path_arial = r'C:/Windows/Fonts/arial.ttf'  # Regular Arial
     font_path_arial_bold = r'C:/Windows/Fonts/arialbd.ttf'  # Bold version
+    font_path_arial_italic = r'C:/Windows/Fonts/ariali.ttf'  # Italic version
+    font_path_arial_bold_italic = r'C:/Windows/Fonts/arialbi.ttf'  # Bold-Italic version
 
+    # Register each variation of Arial
     pdfmetrics.registerFont(TTFont('Arial', font_path_arial))
     pdfmetrics.registerFont(TTFont('Arial-Bold', font_path_arial_bold))
+    pdfmetrics.registerFont(TTFont('Arial-Italic', font_path_arial_italic))
+    pdfmetrics.registerFont(TTFont('Arial-BoldItalic', font_path_arial_bold_italic))
+
+    # Register the font family to map bold, italic, and bold-italic
+    pdfmetrics.registerFontFamily(
+        'Arial',
+        normal='Arial',
+        bold='Arial-Bold',
+        italic='Arial-Italic',
+        boldItalic='Arial-BoldItalic'
+    )
 except Exception as e:
     print(f"Error registering fonts: {e}")
 
