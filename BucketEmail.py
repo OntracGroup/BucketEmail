@@ -33,7 +33,7 @@ def add_section_title(title, df):
     df_with_title = pd.concat([title_row, df], ignore_index=True)
     return df_with_title
 
-def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, optimal_bucket, swl):
+def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df, user_data, swl):
     """Generate a polished PDF with user results and separate tables for each section."""
     pdf_output = io.BytesIO()
     
@@ -920,7 +920,7 @@ def generate_comparison_df(user_data, optimal_bucket, swl):
 
         return side_by_side_df, loadout_productivity_df, swings_simulation_df, improved_cycle_df
 
-def collect_email(sheet, user_data, optimal_bucket, comparison_df, optimal_bucket, swl):
+def collect_email(sheet, user_data, optimal_bucket, comparison_df, swl):
     """Collect the user's email and store it in the Google Sheet."""
     if 'email_form_submitted' not in st.session_state:
         st.session_state.email_form_submitted = False
