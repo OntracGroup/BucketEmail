@@ -163,7 +163,7 @@ def generate_pdf(paragraph, side_by_side_df, loadout_productivity_df, swings_sim
     elements.append(Spacer(1, 8))  # Reduced space below the table
 
   # 4️⃣ Add Section 3: Swings Simulation Results
-    elements.append(Paragraph("<u>1000 Swings Comparisons</u>", heading_style))  # Underlined heading
+    elements.append(Paragraph("<u>1000 Swings Comparison</u>", heading_style))  # Underlined heading
     #elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
