@@ -53,7 +53,7 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     # Title style
     title_style = styles['Title']
     title_style.fontName = 'Helvetica-Bold'
-    title_style.fontSize = 28  # Larger font for the title
+    title_style.fontSize = 26  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
     
     # Heading 1 style
