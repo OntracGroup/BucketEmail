@@ -972,13 +972,13 @@ def add_contact_to_hubspot(email):
             "email": email
         }
     }
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 201:
-        st.success(f"Successfully added {email} to HubSpot!")
-    elif response.status_code == 409:
-        st.warning(f"The email {email} already exists in HubSpot.")
-    else:
-        st.error(f"Failed to add {email}. Error: {response.json()}")
+    #response = requests.post(url, headers=headers, json=data)
+    #if response.status_code == 201:
+        #st.success(f"Successfully added {email} to HubSpot!")
+    #elif response.status_code == 409:
+        #st.warning(f"The email {email} already exists in HubSpot.")
+    #else:
+        #st.error(f"Failed to add {email}. Error: {response.json()}")
     
 # **CALCULATION LOGIC**
 # Run calculations only when the button is pressed
