@@ -70,31 +70,36 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
         canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)  # Fill the page
     
     elements = []  # List of all elements to be added to the PDF
-    
-    # Set up document styles
+
+    # 3️⃣ Set up document styles
     styles = getSampleStyleSheet()
     
-    # Dark mode colors for the text
+    # Title style
     title_style = styles['Title']
+    title_style.fontName = 'Arial-Bold'  # Use Arial-Bold
     title_style.fontSize = 20  # Larger font for the title
     title_style.textColor = colors.HexColor("#ffffff")  # White title color
     
+    # Heading 1 style
     heading_style = styles['Heading1']
+    heading_style.fontName = 'Arial-Bold'  # Use Arial-Bold
     heading_style.fontSize = 16  # Bigger heading font size
     heading_style.textColor = colors.HexColor("#f4c542")  # Orange heading color
-    heading_style.underline = True  # Underline headings
     
+    # Subheading style
     subheading_style = styles['Heading2']
+    subheading_style.fontName = 'Arial-Bold'  # Use Arial-Bold
     subheading_style.fontSize = 14
     subheading_style.textColor = colors.HexColor("#f4c542")  # Orange subheading color
-    subheading_style.underline = True  # Underline subheadings
     
+    # Normal body text style
     normal_style = styles['Normal']
+    normal_style.fontName = 'Arial'  # Use normal Arial
     normal_style.fontSize = 12  # Slightly larger font size for normal content
     normal_style.textColor = colors.HexColor("#e0e0e0")  # Light gray text color for dark mode
 
     # Apply underline manually using a Paragraph style
-    heading_style.fontName = 'Arial-Bold'
+    #heading_style.fontName = 'Arial-Bold'
     
     # 1️⃣ Add Title
     elements.append(Paragraph("ONTRAC XMOR® Bucket Comparison", title_style))
