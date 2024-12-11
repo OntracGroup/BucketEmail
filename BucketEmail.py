@@ -83,41 +83,42 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
 
     # 2️⃣ Add Section 1: Side-by-Side Bucket Comparison
     elements.append(Paragraph("<u>Side-by-Side Bucket Comparison</u>", heading_style))  # Underlined heading
-    #elements.append(Spacer(1, 2))  # Reduced space between sections
     
     # Remove redundant title row and create table data
     side_by_side_table_data = [side_by_side_df.columns.to_list()] + side_by_side_df.values.tolist()
     side_by_side_table = Table(side_by_side_table_data)
+    
+    # Apply the table styles
     side_by_side_table.setStyle(TableStyle([
-        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),
+        # Header row styles
+        ('LINEABOVE', (0, 0), (-1, 0), 1.5, colors.HexColor("#f4c542")),  # Line above header
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1e1e1e")),  # Dark background for header
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.HexColor("#ffffff")),  # White text for header
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Bold font for header
-        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Larger font for header
+        ('FONTSIZE', (0, 0), (-1, 0), 11),  # Font size for header
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),  # Horizontally center text in header
-        #('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),  # Vertically center text in header
         ('PADDING', (0, 0), (-1, 0), 35),  # Padding for header row only
-        
+    
         # Body row styles
-        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),
-        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.HexColor("#2a2a2a")),  # Dark background for body
+        ('TEXTCOLOR', (0, 1), (-1, -1), colors.HexColor("#e0e0e0")),  # Light text color for body
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Regular font for body
         ('FONTSIZE', (0, 1), (-1, -1), 11),  # Font size for body rows
-        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),
-        #('VALIGN', (0, 1), (-1, -1), 'MIDDLE'),  # Vertically center text for body
+        ('ALIGN', (0, 1), (-1, -1), 'CENTER'),  # Center align body content
         ('PADDING', (0, 1), (-1, -1), 35),  # Padding for body rows
-        
+    
         # Gridlines
-        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),
+        ('GRID', (0, 0), (-1, -1), 2, colors.HexColor("#333333")),  # Grid lines for the whole table
     ]))
-
-    # Alternating row colors
+    
+    # Alternating row colors for body rows (applies after the table style)
     for i in range(1, len(side_by_side_table_data)):
         if i % 2 == 0:
             side_by_side_table.setStyle(TableStyle([
-                ('BACKGROUND', (0, i), (-1, i), colors.HexColor("#2f2f2f")),
+                ('BACKGROUND', (0, i), (-1, i), colors.HexColor("#2f2f2f")),  # Darker background for even rows
             ]))
-            
+    
+    # Add the table to elements
     elements.append(side_by_side_table)
     elements.append(Spacer(1, 8))  # Reduced space below the table
 
