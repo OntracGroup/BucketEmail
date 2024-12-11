@@ -160,17 +160,13 @@ def generate_pdf(side_by_side_df, loadout_productivity_df, swings_simulation_df,
     ]))
     elements.append(improved_cycle_table)
 
-    # Set background color for the page (dark mode)
-    def add_dark_mode_background(canvas, doc):
-        canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
-        canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
-    
-    # Apply the dark mode background to the first page and all subsequent pages
-    doc.build(elements, onFirstPage=add_dark_mode_background, onLaterPages=add_dark_mode_background)
+    # Set background color for the entire page (dark mode)
+    doc.pagesize = letter
+    doc.canvas.setFillColor(colors.HexColor("#2a2a2a"))  # Dark background color
+    doc.canvas.rect(0, 0, doc.pagesize[0], doc.pagesize[1], fill=1)
 
-    # Move the pointer back to the beginning of the BytesIO stream to ensure it's ready for reading
-    pdf_output.seek(0)
-
+    # Build the document
+    doc.build(elements)
     
 def adjust_payload_for_new_bucket(dump_truck_payload, new_payload):
     max_payload = dump_truck_payload * 1.10  # Allow up to 10% adjustment
